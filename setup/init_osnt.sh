@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$#" -eq 0 ]]; then
-	source ../parse_config.sh
+	source ../general/parse_config.sh
 	typeset -r settings_loc="$(get_config_value 'VivadoSetting')"
 else
 	typeset -r settings_loc=/home/Vivado/2016.4/settings64.sh
