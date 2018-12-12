@@ -8,12 +8,12 @@ else
 fi
 
 # Make the kernel module
-pushd ~/jcw78/OSNT-SUME-live/lib/sw/driver/osnt_sume_riffa_v1_00
+pushd /root/jcw78/OSNT-SUME-live/lib/sw/driver/osnt_sume_riffa_v1_00
 make
 popd
-pushd ~/jcw78/OSNT-SUME-live/projects/osnt/test
+pushd /root/jcw78/OSNT-SUME-live/projects/osnt/test
 # The xilinx path is set by some mysterious config
 # file I can't find.
 export XILINX_PATH=""
 source $settings_loc
-bash run_load_image.sh ~/jcw78/osnt_20170129.bit
+bash run_load_image.sh /root/jcw78/osnt_20170129.bit

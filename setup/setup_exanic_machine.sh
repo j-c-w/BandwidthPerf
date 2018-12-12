@@ -1,8 +1,8 @@
 #!/bin/bash
 
-mkdir -p ~/jcw78
+mkdir -p /root/jcw78
 
-pushd ~/jcw78
+pushd /root/jcw78
 if [[ ! -d exanic-software ]]; then
 	git clone https://github.com/exablaze-oss/exanic-software
 fi

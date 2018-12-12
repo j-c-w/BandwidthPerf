@@ -2,11 +2,11 @@
 
 set -ue
 
-mkdir -p ~/jcw78/
-pushd ~/jcw78
+mkdir -p /root/jcw78/
+pushd /root/jcw78
 
 # Get the CLI.
-if [[ ! -d ~/jcw78/OSNT-SUME-live/ ]]; then
+if [[ ! -d /root/jcw78/OSNT-SUME-live/ ]]; then
 	git clone https://github.com/NetFPGA/OSNT-SUME-live.git
 
 fi
@@ -17,22 +17,22 @@ git checkout 341708ffab448efcf9b77e14aa5c85c8eb1fc4c3
 popd
 
 # Build the riffa module:
-pushd ~/jcw78/OSNT-SUME-live/lib/sw/driver/osnt_sume_riffa_v1_00/
+pushd /root/jcw78/OSNT-SUME-live/lib/sw/driver/osnt_sume_riffa_v1_00/
 make
 popd
 
 # Also get the bitfile:
-if [[ ! -f ~/jcw78/osnt_20170129.bit ]];  then
+if [[ ! -f /root/jcw78/osnt_20170129.bit ]];  then
 	wget https://www.cl.cam.ac.uk/research/srg/netos/projects/netfpga/bitfiles/OSNT-SUME-live/osnt_20170129.bit
 fi
 
 # Get the applications directory:
-if [[ ! -d ~/jcw78/SUMMER2017/ ]]; then
+if [[ ! -d /root/jcw78/SUMMER2017/ ]]; then
 	git clone https://github.com/cucl-srg/SUMMER2017
 fi
 
 # Either way, go in and check out the right  version:
-pushd ~/jcw78/SUMMER2017
+pushd /root/jcw78/SUMMER2017
 git checkout 17d29a6efcf2c9b3fb5644a741abe1d0d1ef0773
 popd
 
