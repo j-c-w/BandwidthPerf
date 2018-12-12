@@ -8,7 +8,12 @@ get_config_value() {
 	# We assume the default config file is a local one.
 	local config_file=${2:-config}
 
-	matches_count=$(grep -c -e "^$field_name:" $config_file)
+	if [[ ! -f $config_file ]]; then
+		echo "Config file $config_file doesn't exist" >&2
+		exit 2
+	fi
+
+	matches_count=$(grep -c -e "^$field_name: " $config_file)
 	if [[ $matches_count == "0" ]]; then
 		echo "Expected to find config value $field_name but found" >&2
 		echo "nothing.  Does the file $config_file contain $field_name?" >&2
@@ -20,5 +25,5 @@ get_config_value() {
 	fi
 
 	# Now we've got the field, we can get the value out with awk.
-	awk -F' '  "/^$field_name:/ {print \$2}" $config_file
+	awk -F': '  "/^$field_name:/ {print \$2}" $config_file
 }
