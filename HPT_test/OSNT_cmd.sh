@@ -11,6 +11,7 @@ if [[ ! -f .installed ]]; then
 fi
 
 source ../general/parse_config.sh
+source ../general/remote_run.sh
 
 osnt_mach=$(get_config_value "OSNTMachine")
-ssh $osnt_mach 'bash -s ' < local_OSNT_cmd.sh "$@"
+remote_run $osnt_mach local_OSNT_cmd.sh "$@"
