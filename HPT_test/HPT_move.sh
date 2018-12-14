@@ -8,12 +8,15 @@ if [[ ! -f .installed ]]; then
 fi
 
 if [[ "$#" -ne 2 ]]; then
-	echo "Usage: $0 <port number> <file>"
+	echo "Usage $0 <source> <target>"
 	exit 1
 fi
 
 source ../general/parse_config.sh
 source ../general/remote_run.sh
 
-hpt_mach=$(get_config_value "HPTMachine")
-remote_run $hpt_mach local_HPT_start_capture.sh "$@"
+f_source="$1"
+f_target="$2"
+hptmachine="$(get_config_value "HPTMachine")"
+
+remote_run $hptmachine local_HPT_move.sh "$f_source" "$f_target"

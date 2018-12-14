@@ -15,6 +15,7 @@ if [[ "$#" -ne 0 ]]; then
 fi
 
 source ../general/parse_config.sh
+source ../general/remote_run.sh
 
-osnt_mach=$(get_config_value "HPTMachine")
-ssh $osnt_mach 'bash -s ' < local_HPT_end_capture.sh
+hpt_mach=$(get_config_value "HPTMachine")
+remote_run $hpt_mach local_HPT_end_capture.sh
