@@ -1,12 +1,14 @@
 HPTMachine: root@nf-server12.nf.cl.cam.ac.uk
 OSNTMachine: root@nf-server13.nf.cl.cam.ac.uk
 # This is the location where the packet traces will be captured to.  It should be a file in existing folders on the HPT machine.
-HPTTempStorageLocation: /media/nvme/hpt
+HPTTempStorageLocation: /media/ramdisk
 # This is the location where packet traces will be stored long-term to.  It should be a location that where the command `mv $HPTTempStorageLocation $HPTPermanentStorageLocation` will work.
-HPTPermanentStorageLocation: /media/root/My Passport/hpt_eval
+HPTPermanentStorageLocation: /media/root/hpt_eval
 # This should hold the location of the Xilinx source file
 # on the *OSNTMachine*.
 # If it's not found, the scripts will not attempt to use it
 # so you can see the original error and track down what it's meant to
 # be.
 VivadoSetting: /home/Vivado/2016.4/settings64.sh
+# Note:  you will also need to edit the value in ../general/generate_pcap.py if this value is increased.
+MaxLineSize: 1514
