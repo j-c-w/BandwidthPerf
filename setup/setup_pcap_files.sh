@@ -8,7 +8,7 @@ fi
 
 # Generate all sizes of PCAP file up to max size:
 pushd ../pcap_files/
-for i in {1..${2}}; do
+for i in $(seq 1 ${2}); do
 	if [[ ! -f $i.cap ]]; then
 		python ../general/generate_pcap.py $i
 		mv variable_length.pcap $i.cap
