@@ -19,11 +19,11 @@ remote_run() {
 	  count=$((count+1))
 	done
 
-	echo "SSH'ing to $realscript"
+	echo "SSH'ing to $host"
 	if [[ $# -gt 0 ]]; then
-		ssh $host 'cat | bash /dev/stdin ' "${args[@]}" < "$realscript"
+		ssh $host 'cat | bash /dev/stdin ' "${args[@]}" < "$realscript" | tee .ssh_output
 	else
-		ssh $host 'bash -s ' < $realscript
+		ssh $host 'bash -s ' < $realscript | tee .ssh_output
 	fi
 	echo "Executing on $(hostname)"
 }
