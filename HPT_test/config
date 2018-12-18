@@ -2,7 +2,7 @@ HPTMachine: root@nf-server12.nf.cl.cam.ac.uk
 OSNTMachine: root@nf-server13.nf.cl.cam.ac.uk
 # This is the location where the packet traces will be captured to.  It should be a file in existing folders on the HPT machine.
 HPTTempStorageLocation: /media/ramdisk
-# This is the location where packet traces will be stored long-term to.  It should be a location that where the command `mv $HPTTempStorageLocation $HPTPermanentStorageLocation` will work.
+# This is the location where packet traces will be stored long-term to.  It should be a location that where the command `mv $HPTTempStorageLocation $HPTPermanentStorageLocation` will work.  It would be much better if the pathname had no spaces in it.
 HPTPermanentStorageLocation: /media/root/hpt_eval
 # This should hold the location of the Xilinx source file
 # on the *OSNTMachine*.
