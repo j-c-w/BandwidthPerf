@@ -26,12 +26,10 @@ source ../general/remote_scp.sh
 source ../general/remote_exists.sh
 
 files=( ../pcap_files/*.cap )
-host=$1
+export host=$1
 
 ssh $host 'mkdir -p /root/jcw78/pcap_files'
 existing_files=$(ssh $host 'cd /root/jcw78/pcap_files; find . -name "*"')
-for file in ${files[@]}; do
-	if [[ ! ]]; then
-		remote_scp $host $file /root/jcw78/pcap_files/$(basename $file)
-	fi
-done
+parallel -j 32 --retries 5 --progress 'source ../general/remote_scp.sh; remote_scp $host {} /root/jcw78/pcap_files/$(basename {})' ::: ${files[@]}
+
+wait
