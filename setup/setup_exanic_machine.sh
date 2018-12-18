@@ -51,3 +51,6 @@ if [[ $fm_date == 0 ]]; then
 	# Exit with an error to make sure all scripts stop.
 	exit 1
 fi
+
+# Install any python software needed.
+python -m pip install -U matplotlib

@@ -6,9 +6,12 @@ if [[ "$#" -ne 2 ]]; then
 	echo "Usage: $0 <target machine> <max pcap size>"
 fi
 
+host=$1
+max_size=$2
+
 # Generate all sizes of PCAP file up to max size:
 pushd ../pcap_files/
-for i in $(seq 1 ${2}); do
+for i in $(seq 1 ${max_size}); do
 	if [[ ! -f $i.cap ]]; then
 		python ../general/generate_pcap.py $i
 		mv variable_length.pcap $i.cap
@@ -16,14 +19,19 @@ for i in $(seq 1 ${2}); do
 done
 popd
 
+echo "PCAP file generated!  Copying them to ${host}..."
+
 # Now, copy them all.
 source ../general/remote_scp.sh
+source ../general/remote_exists.sh
 
 files=( ../pcap_files/*.cap )
 host=$1
 
 ssh $host 'mkdir -p /root/jcw78/pcap_files'
-for file in $files; do
-	set -x
-	remote_scp $host $file /root/jcw78/pcap_files
+existing_files=$(ssh $host 'cd /root/jcw78/pcap_files; find . -name "*"')
+for file in ${files[@]}; do
+	if [[ ! ]]; then
+		remote_scp $host $file /root/jcw78/pcap_files/$(basename $file)
+	fi
 done
