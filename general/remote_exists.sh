@@ -6,11 +6,14 @@ remote_exists() {
 		exit 1
 	fi
 
+	host=$1
+	file=$2
+
 	is_file=$(ssh $host "if [[ -f $file ]]; then; echo 1; else; echo 0; fi")
 
 	if [[ $is_file == 1 ]]; then
-		true
+		echo "Exists"
 	else
-		false
+		echo "NotExists"
 	fi
 }
