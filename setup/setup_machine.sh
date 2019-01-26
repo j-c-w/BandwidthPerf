@@ -41,7 +41,7 @@ if [[ ! -d OSNT-SUME-live ]]; then
 fi
 
 # Finally, get the SUMMER2017 repo:
-if [[ ! -d SUMME2017 ]]; then
+if [[ ! -d SUMMER2017 ]]; then
 	git clone https://github.com/j-c-w/SUMMER2017
 fi
 
@@ -49,14 +49,16 @@ fi
 cp /root/jcw78/scripts/bitfiles/* /root/jcw78
 
 # Generate the pcap files:
-pushd /root/jcw78/pcap_files/
+pushd /root/jcw78/scripts/pcap_files/
+echo "Generating PCAP files..."
 for i in $(seq 1 1518); do
 	if [[ ! -f $i.cap ]]; then
-		python ../general/generate_pcap.py $i
+		python ../general/generate_pcap.py $i &> /dev/null
 		mv variable_length.pcap $i.cap
 	fi
 done
 popd
+echo "Done generating PCAP files."
 
 # Make sure vivado is installed:
 if [[ ! -d $VIVADO_LOC ]]; then
