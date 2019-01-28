@@ -54,6 +54,11 @@ if [[ ! -d OSNT-SUME-live ]]; then
 	git clone https://github.com/NetFPGA/OSNT-SUME-live.git
 fi
 
+# We need to build the OSNT software.
+pushd /root/jcw78/OSNT-SUME-live/projects/osnt/sw/host/app
+make
+popd
+
 # Finally, get the SUMMER2017 repo:
 if [[ ! -d SUMMER2017 ]]; then
 	git clone https://github.com/j-c-w/SUMMER2017
