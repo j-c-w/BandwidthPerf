@@ -1,9 +1,9 @@
 #!/bin/bash
 
 set -ue
-mkdir -p /root/jcw78
+mkdir -p /root/jcw78/scripts/hpt_setup/
 
-pushd /root/jcw78
+pushd /root/jcw78/scripts/hpt_setup/
 if [[ ! -d exanic-software ]]; then
 	git clone https://github.com/exablaze-oss/exanic-software
 fi
@@ -28,7 +28,7 @@ modprobe exanic
 exanic-config exanic0
 
 # Check that the firmware is the right date:
-pushd /root/jcw78/exanic-software/util
+pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
 fm_date=$(./exanic-config | grep -ce 'Firmware date: 20180221 ')
 popd
 if [[ $fm_date == 0 ]]; then
@@ -43,7 +43,7 @@ if [[ $fm_date == 0 ]]; then
 
 	# Now, install that firmware.
 	firmware_loc="$PWD/exanic_hpt_20180221.fw"
-	pushd /root/jcw78/exanic-software/util
+	pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
 	./exanic-fwupdate -d exanic0 -r $firmware_loc
 	# Note that the system needs a reboot now, so
 	# exit with an error, inform the user and then wait.
