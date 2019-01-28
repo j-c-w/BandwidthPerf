@@ -2,6 +2,20 @@
 
 set -ue
 
+# This script requires the directory to have been cloned
+# already.  It should be called locally for the config
+# sourcing to work OK.
+
+if [[ ! -f ../general/parse_config.sh ]]; then
+	echo "Error: could not load the config.  Is this script being run from the right directory?"
+	exit 1
+fi
+
+if [[ ! -d /root/jcw78/scripts ]]; then
+	echo "Error: could not find the scripts directory.  Have you run pre_setup_machine.sh?"
+	exit 1
+fi
+
 source ../general/parse_config.sh 
 VIVADO_LOC=$(get_config_value "VivadoLocation")
 XMD_LOC=$(get_config_value "XMDLocation")
@@ -59,6 +73,18 @@ for i in $(seq 1 1518); do
 done
 popd
 echo "Done generating PCAP files."
+
+# Make and install the Exanic software.
+pushd /root/jcw78/scripts/hpt_setup
+# First make the generic repository:
+pushd exanic-software
+make
+sudo make install
+popd
+# Then make the exanic-exact stuff:
+pushd exanic-exact/exact-capture-1.0RC/
+make
+sudo make install
 
 # Make sure vivado is installed:
 if [[ ! -d $VIVADO_LOC ]]; then
