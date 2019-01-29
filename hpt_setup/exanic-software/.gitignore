@@ -3,5 +3,11 @@ exanic-*.tar.gz
 doc/*.odt
 doc/*.pdf
 src/docs/*
+**/*.o
+**/*.a
+**/*.symvers
+**/*.mod.c
+**/*.ko
+util/exanic-clock-check
 !.gitignore
 *~
