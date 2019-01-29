@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 
 # This script does a pre-setup to make sure that the setup scripts exist etc.
 
