@@ -72,7 +72,7 @@ pushd /root/jcw78/scripts/pcap_files/
 echo "Generating PCAP files..."
 for i in $(seq 1 1518); do
 	if [[ ! -f $i.cap ]]; then
-		python ../general/generate_pcap.py $i &> /dev/null
+		python ../general/generate_pcap.py $i 1> /dev/null
 		mv variable_length.pcap $i.cap
 	fi
 done
