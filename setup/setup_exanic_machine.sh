@@ -5,12 +5,11 @@ mkdir -p /root/jcw78/scripts/hpt_setup/
 
 pushd /root/jcw78/scripts/hpt_setup/
 if [[ ! -d exanic-software ]]; then
-	git clone https://github.com/exablaze-oss/exanic-software
+	echo "Run the main setup first."
+	exit 1
 fi
 
-# Regardless, check out the 'right' version and build it all.
 pushd exanic-software
-git checkout c2aff3c0d120d4cf278b32c1c0b37b45904cb788
 make
 make install
 popd
