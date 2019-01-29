@@ -2,4 +2,4 @@
 
 # This is a script that stops ALL HPT recording
 # sessions.
-pkill exanic-exact
+pkill exact-capture
