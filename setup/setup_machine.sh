@@ -96,12 +96,14 @@ if [[ ! -d $VIVADO_LOC ]]; then
 	echo "Vivado should be installed in $VIVADO_LOC"
 	echo "Edit the config file in $PWD/config"
 	echo "Install failed: set Vivado location and run again"
-	exit 1
+	echo "If $(hostname) is a machine that needs to use a NetFPGA then you need to have Vivado installed.  Otherwise, this can be ignored."
+	exit 0
 fi
 if [[ ! -d $XMD_LOC ]]; then
 	echo "XMD should be installed in $XMD_LOC"
 	echo "Edit the config file in $PWD/config"
 	echo "Install failed: set XMD location and run again"
-	exit 1
+	echo "If $(hostname) is a machine that needs to use a NetFPGA, then you need to have XMD installed.  Otherwise, this can be ignored."
+	exit 0
 fi
 echo "Install finished!"
