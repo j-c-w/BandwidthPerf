@@ -1,0 +1,5 @@
+NumberToSend: 100000000
+# Both in Mbps
+MinRate: 3000
+MaxRate: 10000
+StepSize: 100
