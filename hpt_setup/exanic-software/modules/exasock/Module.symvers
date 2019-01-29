@@ -1,0 +1,3 @@
+0xbab64eb8	exanic_netdev_intercept_remove	/root/jcw78/scripts/hpt_setup/exanic-software/modules/exanic/exanic	EXPORT_SYMBOL
+0xb08dd3f4	exanic_netdev_intercept_add	/root/jcw78/scripts/hpt_setup/exanic-software/modules/exanic/exanic	EXPORT_SYMBOL
+0x6310f797	exanic_transmit_frame	/root/jcw78/scripts/hpt_setup/exanic-software/modules/exanic/exanic	EXPORT_SYMBOL
