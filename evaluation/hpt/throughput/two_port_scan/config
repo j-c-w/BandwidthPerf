@@ -1,0 +1,6 @@
+NumberToSend: 100000000
+# Recall that since these rates are doubled, they'll go into
+# both ports.
+MinRate: 3000
+MaxRate: 10000
+StepSize: 100
