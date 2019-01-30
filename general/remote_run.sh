@@ -55,3 +55,16 @@ remote_run_script() {
 	ssh $host "cd /root/jcw78/scripts/$scriptdir; bash $scriptname $args" | tee .ssh_output
 	echo "Executing on $(hostname)"
 }
+
+remote_run_command() {
+	if [[ "$#" -ne 2 ]]; then
+		echo "usage remote_run_command remotehost command"
+		exit 1
+	fi
+	local host=$1
+	local cmd=$2
+
+	echo "SSH'ing to $host"
+	ssh $host "$cmd" | tee .ssh_output
+	echo "Executing on $(hostname)"
+}
