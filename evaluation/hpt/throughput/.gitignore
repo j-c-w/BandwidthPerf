@@ -1,1 +1,2 @@
-.ssh_output
+**/.ssh_output
+*.log
