@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 set -ue
+set -x
 
 zmodload zsh/mathfunc
 
@@ -31,7 +32,7 @@ remote_run_script $HPTMachine hpt/stop_recording.sh
 for rate in $(seq $starting_rate $increase $final_rate); do
 	echo "Capturing at $rate Mbps"
 	# Start the exanic recording.
-	remote_run_script $HPTMachine hpt/record_port.sh $exa_port0 /root/jcw78/nvme/${rate}_one_port.erf $cpus /root/jcw78/nvme/${rate}_cmd_out
+	remote_run_script $HPTMachine hpt/record_port.sh $exa_port0 /root/jcw78/nvme/one_port_scan/${rate}_one_port.erf $cpus /root/jcw78/nvme/one_port_scan/${rate}_cmd_out
 
 	# Calculate the IPG from the rate here:
 	# On a 10G channel, one bit is 0.1ns.
@@ -45,7 +46,7 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 	expected_space=$(( num_to_send * packet_length ))
 	total_space=$(( total_space + expected_space / 1000000000.0 ))
 	echo "Expected runtime is $expected_time"
-	echo "Expected space is $expected_space"
+	echo "Expected space is ${expected_space}B"
 	echo "Total space used by this test is $total_space GB"
 
 	# Run OSNT at the desired rate.
