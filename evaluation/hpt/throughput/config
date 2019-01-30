@@ -9,4 +9,9 @@ HPTInterface1: exa1
 HPTCPUs0: 44:45:46
 HPTCPUs1: 47:48:49
 # Note that the NVMe device must be formatted etc.
+# Should be at least 2TB.
 NVMeDeviceName:  /dev/nvme0n1p1
+# This may be the normal HD or an external disk.
+# Files are generally compressed before being stored
+# here.
+LTSLocations: /root/jcw78/lts
