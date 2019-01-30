@@ -8,6 +8,7 @@ src/docs/*
 **/*.symvers
 **/*.mod.c
 **/*.ko
+**/*.so
 util/exanic-clock-check
 !.gitignore
 *~
