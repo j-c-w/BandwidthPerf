@@ -15,3 +15,5 @@ NVMeDeviceName:  /dev/nvme0n1p1
 # Files are generally compressed before being stored
 # here.
 LTSLocations: /root/jcw78/lts
+# Number of runs for the test:
+Runs: 10
