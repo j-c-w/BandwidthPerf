@@ -62,7 +62,7 @@ remote_run_command() {
 		exit 1
 	fi
 	local host=$1
-	local cmd=$2
+	local cmd="$2"
 
 	echo "SSH'ing to $host"
 	ssh $host "$cmd" | tee .ssh_output
