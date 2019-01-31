@@ -16,4 +16,4 @@ NVMeDeviceName:  /dev/nvme0n1p1
 # here.
 LTSLocations: /root/jcw78/lts
 # Number of runs for the test:
-Runs: 10
+Runs: 3
