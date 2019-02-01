@@ -20,5 +20,5 @@ for run in $(seq 1 $runs); do
 
 	# This script will have compressed each one individually,
 	# meaning we only have to move the directory as a whole.
-	remote_run_command $HPTMachine "mv /home/jcw78/nvme/size_scan $lts_loc/size_scan_$run"
+	remote_run_command $HPTMachine "mv /root/jcw78/nvme/size_scan $lts_loc/size_scan_$run"
 done

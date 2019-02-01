@@ -70,7 +70,7 @@ for size in $(seq $starting_size $increase $final_size); do
 
 	# This test uses too much disk space.  Compress the PCAP file from each run.
 
-	if (( last_compress < size - compress_step )); then
+	if (( last_compress < size - compress_step )) || (( size == final_size )); then
 		remote_run_command $HPTMachine "parallel pbzip2 /root/jcw78/nvme/size_scan/{}_psize.erf-0.expcap /root/jcw78/nvme/size_scan/{}_psize.erf-0.expcap.bz2 -f ::: $(seq -s' ' $last_compress $size)"
 
 		# delete all the just compressed files.
