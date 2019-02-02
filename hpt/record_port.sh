@@ -6,10 +6,9 @@ if [[ $# -ne 4 ]]; then
 	exit 1
 fi
 
-# The ExaNIC appears to react fine to having multiple               
-# instances running.  There is a kill script, but
-# we don't do that here.  This lets us start multiple
-# experiments on the machine.
+# Stop any other recording that is going on.
+pkill exact-capture
+
 port=$1
 out_file=$2
 cpus=$3
