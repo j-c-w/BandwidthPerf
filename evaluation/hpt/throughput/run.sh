@@ -37,8 +37,7 @@ for i in $(seq 1 $runs); do
 	# file.
 	remote_run_script $HPTMachine evaluation/hpt/throughput/two_port_scan/plot.sh /root/jcw78/nvme/two_port_scan
 	# Get the data files out:
-	remote_run_script $HPTMachine general/paste_wrapper.sh /root/jcw78/nvme/two_port_scan/port0_data /root/jcw78/nvme/port0_data_builder /root/jcw78/nvme/port0_data_builder
-	remote_run_script $HPTMachine general/paste_wrapper.sh /root/jcw78/nvme/two_port_scan/port1_data /root/jcw78/nvme/port1_data_builder /root/jcw78/nvme/port1_data_builder
+	remote_run_script $HPTMachine general/paste_wrapper.sh /root/jcw78/nvme/two_port_scan/both_ports_data /root/jcw78/nvme/both_ports_data_builder /root/jcw78/nvme/both_ports_data_builder
 
 	# Archive the folders:
 	remote_run_script $HPTMachine general/archive_results.sh /root/jcw78/nvme/two_port_scan/ /root/jcw78/nvme/two_port_scan_${i}.tar.bz2
@@ -50,7 +49,7 @@ remote_run_script $HPTMachine $PWD/plot.sh /root/jcw78/nvme/port0_data_builder /
 # Finally, move all the archived folders over to the LTS.
 lts_dir=$(get_config_value LTSLocations)
 remote_run_command $HPTMachine "mv /root/jcw78/nvme/two_port_scan_* $lts_dir"
-remote_run_command $HPTMachine "mv /root/jcw78/nvme/port{0,1}_data_builder $lts_dir"
+remote_run_command $HPTMachine "mv /root/jcw78/nvme/both_ports_data_builder $lts_dir"
 
 popd
 echo "All done!"

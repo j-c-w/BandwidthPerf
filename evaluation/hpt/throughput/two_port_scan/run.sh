@@ -21,8 +21,8 @@ HPTMachine=$(get_config_value MachineB ../config)
 
 exa_port0=$(get_config_value HPTInterface0 ../config)
 exa_port1=$(get_config_value HPTInterface1 ../config)
-cpus0=$(get_config_value HPTCPUs0 ../config)
-cpus1=$(get_config_value HPTCPUs1 ../config)
+exa_port_both=$(get_config_value HPTInterfaceBoth ../config)
+both_cpus=$(get_config_value HPTCPUsBoth ../config)
 # Keep track of the total space used.
 total_space=0.0
 # Wire capacity in Mbps.
@@ -53,8 +53,7 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 		continue
 	fi
 	# Start the exanic recording.
-	remote_run_script $HPTMachine hpt/record_port.sh $exa_port0 /root/jcw78/nvme/two_port_scan/${rate}_two_port_2.erf $cpus0 /root/jcw78/nvme/two_port_scan/${rate}_two_port_cmd_out_0
-	remote_run_script $HPTMachine hpt/record_port.sh $exa_port1 /root/jcw78/nvme/two_port_scan/${rate}_two_port_1.erf $cpus1 /root/jcw78/nvme/two_port_scan/${rate}_two_port_cmd_out_1
+	remote_run_script $HPTMachine hpt/record_port.sh $exa_port_both /root/jcw78/nvme/two_port_scan/${rate}_two_port.erf $both_cpus /root/jcw78/nvme/two_port_scan/${rate}_both_ports_cmd_out
 
 	# Run OSNT at the desired rate.
 	remote_run_script $OSNTMachine osnt/run_osnt.sh -ifp0 /root/jcw78/scripts/pcap_files/64.cap -rpn0 $num_to_send -ipg0 $ipg -run
