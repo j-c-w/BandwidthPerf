@@ -48,6 +48,8 @@ popd
 # Install things on the machine.
 sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel
 python -m pip install  matplotlib --ignore-installed
+pip install statistics
+pip install numpy
 
 # Get the PCAP parsing scripts
 if [[ ! -d process_pcap_traces ]]; then
