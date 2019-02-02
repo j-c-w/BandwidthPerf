@@ -17,4 +17,4 @@ if [[ "$1" == *bz2 ]]; then
 fi
 
 echo "Converting..."
-/root/jcw78/scripts/hpt_setup/exanic-exact/exact-capture-1.0RC/bin/exact-pcap-extract -i "$infile" -w "$outfile" -a -f pcap
+/root/jcw78/scripts/hpt_setup/exanic-exact/exact-capture-1.0RC/bin/exact-pcap-extract -i "$infile" -w "$outfile" -a -f pcap --usecpcap 1
