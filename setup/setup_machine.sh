@@ -45,6 +45,15 @@ pushd NetFPGA-SUME-live/lib/sw/std/driver/sume_riffa_v1_0_0
 make
 popd
 
+# Install things on the machine.
+sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel
+python -m pip install  matplotlib --ignore-installed
+
+# Get the PCAP parsing scripts
+if [[ ! -d process_pcap_traces ]]; then
+	git clone https://github.com/j-c-w/process_pcap_traces
+fi
+
 # Get OSNT and the NRG-dev folder.
 if [[ ! -d NRG-dev ]]; then
 	git clone https://github.com/j-c-w/NRG-dev
