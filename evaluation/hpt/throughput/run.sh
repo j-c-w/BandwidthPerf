@@ -29,8 +29,7 @@ cont_msg="Enter> to continue when this is done"
 vared 'cont_msg'
 pushd two_port_scan/
 # These build up data accross runs.
-remote_run_command $HPTMachine "echo -n '' > /root/jcw78/nvme/port0_data_builder"
-remote_run_command $HPTMachine "echo -n '' > /root/jcw78/nvme/port1_data_builder"
+remote_run_command $HPTMachine "echo -n '' > /root/jcw78/nvme/port_data_builder"
 for i in $(seq 1 $runs); do 
 	./run.sh
 	# We need to get the data out and keep it in a unified
@@ -44,7 +43,7 @@ for i in $(seq 1 $runs); do
 done
 
 # Run the analyses on the overall folders.
-remote_run_script $HPTMachine $PWD/plot.sh /root/jcw78/nvme/port0_data_builder /root/jcw78/nvme/port1_data_builder
+remote_run_script $HPTMachine /evaluation/hpt/throughput/two_port_scan/plot.sh /root/jcw78/nvme/both_ports_data_builder
 
 # Finally, move all the archived folders over to the LTS.
 lts_dir=$(get_config_value LTSLocations)
