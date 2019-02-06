@@ -1,0 +1,4 @@
+NumberToSend: 1
+MinRate: 3000
+MaxRate: 3000
+StepSize: 0

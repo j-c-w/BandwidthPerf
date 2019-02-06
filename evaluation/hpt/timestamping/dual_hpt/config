@@ -1,0 +1,8 @@
+OtherHPTMachine: TODO
+OtherHPTInterface: exa0
+OtherNVMeDeviceName: TODO
+OtherHPTCPUs: 10,11,12
+NumberToSend: 10000000000
+MinRate: 10000
+MaxRate: 10000
+StepSize: 0

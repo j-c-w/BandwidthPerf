@@ -1,0 +1,10 @@
+LTSLocations: /root/jcw78/lts
+MinSize: 64
+MaxSize: 1514
+SizeStep: 1
+
+# This is for the scale of parallelism we can use.  Configure the max number of files we want to decompress and plot at once.
+Parallelism: 5
+
+# Also configure a place to decompress the files to.
+DecompressLocation: /root/jcw78/tmp/

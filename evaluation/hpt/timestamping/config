@@ -8,7 +8,6 @@ HPTInterface1: exa1
 # ports can be running at the same time.
 HPTCPUs0: 44:45:46
 HPTCPUs1: 47:48:49
-HPTCPUsBoth: 44:47,45:48,46,49
 # Note that the NVMe device must be formatted etc.
 # Should be at least 2TB.
 NVMeDeviceName:  /dev/nvme0n1p1
@@ -17,4 +16,4 @@ NVMeDeviceName:  /dev/nvme0n1p1
 # here.
 LTSLocations: /root/jcw78/lts
 # Number of runs for the test:
-Runs: 3
+Runs: 20
