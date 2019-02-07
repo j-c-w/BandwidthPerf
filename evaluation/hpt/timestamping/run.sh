@@ -13,18 +13,20 @@ if [[ ${#test_lists} -lt 1 ]]; then
 	exit 1
 fi
 
+compress_after=3
 
 source /root/jcw78/scripts/general/parse_config.sh
 source /root/jcw78/scripts/general/remote_run.sh
 # First, setup the machines
-./setup_size_machines.sh
+# ./setup_size_machines.sh
 
 # Now, get the number of runs:
 runs=$(get_config_value "Runs")
 HPTMachine=$(get_config_value "MachineB")
 lts_loc=$(get_config_value "LTSLocations")
 
-if [[ *single-hpt* == "${test_lists[@]}" ]]; then
+if [[ ${test_lists[@]} == *"--single-hpt"* ]]; then
+	last_compress=1
 	for run in $(seq 1 $runs); do
 		echo "Starting run number $run"
 		pushd single_hpt/
@@ -35,16 +37,18 @@ if [[ *single-hpt* == "${test_lists[@]}" ]]; then
 		# meaning we only have to move the directory as a whole.
 		remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_same_card/ /root/jcw78/nvme/hpt_accuracy_same_card_run_$run/"
 
-		if (( run % 10 = 0 )); then
-			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel bzip2 hpt_accuracy_same_card_run_{} ::: $(seq $((run - 9)) $run)"
+		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
+			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_same_card_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_same_card_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			last_compress=$((run + 1))
 		fi
 	done
 	# Copy all those files to the long term storage device.
-	remote_run_command $HPTMachine "mkdir -p $lts/hpt_accuracy_same_card"
-	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_same_card_run_* $lts/hpt_accuracy_same_card"
+	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_same_card"
+	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_same_card_run_* $lts_loc/hpt_accuracy_same_card"
 fi
 
-if [[ *dual-hpt* == ${test_lists[@]} ]]; then
+if [[ ${test_lists[@]} == *dual-hpt* ]]; then
+	last_compress=1
 	echo "Now, make sure that OSNT is connected to two different HPT cards through a splitter."
 	cont_msg="Enter to continue"
 	vared 'cont_msg'
@@ -58,8 +62,9 @@ if [[ *dual-hpt* == ${test_lists[@]} ]]; then
 		# meaning we only have to move the directory as a whole.
 		remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards/ /root/jcw78/nvme/hpt_accuracy_different_cards_run_$run/"
 
-		if (( run % 10 = 0 )); then
-			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel bzip2 hpt_accuracy_different_cards_run_{} ::: $(seq $((run - 9)) $run)"
+		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
+			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			last_compress=$(( run + 1 ))
 		fi
 	done
 
@@ -68,7 +73,8 @@ if [[ *dual-hpt* == ${test_lists[@]} ]]; then
 	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_run_* $lts_loc/hpt_accuracy_different_cards"
 fi
 
-if [[ *-hpt-dag* == "${test_lists[@]}" ]]; then
+if [[ "${test_lists[@]}" == *-hpt-dag* ]]; then
+	last_compress=1
 	echo "Make sure that OSNT is connected to a DAG and an HPT card through a splitter."
 	cont_msg="Enter to continue"
 	vared 'cont_msg'
@@ -83,9 +89,10 @@ if [[ *-hpt-dag* == "${test_lists[@]}" ]]; then
 		remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag/ /root/jcw78/nvme/hpt_accuracy_vs_dag_run_$run/"
 		remote_run_command $DAGMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag/ /root/jcw78/nvme/hpt_accuracy_vs_dag_run_$run/"
 
-		if (( run % 10 = 0 )); then
-			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel bzip2 hpt_accuracy_vs_dag_run_{} ::: $(seq $((run - 9)) $run)"
-			remote_run_command $DAGMachine "cd /root/jcw78/nvme; parallel bzip2 hpt_accuracy_vs_dag_run_{} ::: $(seq $((run - 9)) $run)"
+		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
+			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $DAGMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			last_compress=$((run + 1))
 		fi
 	done
 

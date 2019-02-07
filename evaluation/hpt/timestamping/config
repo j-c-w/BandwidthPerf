@@ -17,3 +17,5 @@ NVMeDeviceName:  /dev/nvme0n1p1
 LTSLocations: /root/jcw78/lts
 # Number of runs for the test:
 Runs: 20
+# This is a directory where long term work can be done.  It allows for things like processing of pcap files.
+WorkDirectory: /root/jcw78/tmp
