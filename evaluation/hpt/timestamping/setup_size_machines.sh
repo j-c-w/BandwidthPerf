@@ -43,4 +43,9 @@ remote_run_script $machA bitfiles/setup_bitfile.sh osnt_20170129.bit
 
 # Make sure the long term storage and the temporary NVMe are there on the capturing device.
 remote_run_script $machB setup/setup_nvme.sh $nvme_dev_name
-remote_run_script $otherHPTMach setup/setup_nvme.sh $other_nvme_dev_name
+if [[ $other_nvme_dev_name == None ]]; then
+	# Make a RAMDISK.
+	remote_run_script $otherHPTMach setup/setup_ramdisk.sh /root/jcw78/nvme 64g
+else
+	remote_run_script $otherHPTMach setup/setup_nvme.sh $other_nvme_dev_name
+fi
