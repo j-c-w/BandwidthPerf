@@ -12,5 +12,7 @@ if [[ ! -d $(dirname $3) ]]; then
 	mkdir -p $(dirname $3)
 fi
 
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
 dagload
 dagsnap -d $1 -o $2 > $3 &
