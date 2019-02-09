@@ -23,9 +23,13 @@ kill_iperf() {
 }
 kill_iperf
 
+set -x
+
 # Start the server:
 remote_run_command $server "iperf -s > $server_file &" &
-remote_run_command $client "iperf -c $server_test_interface -t $time > $client_file &" &
+# Make sure the server has actually started
+sleep 1
+remote_run_command $client "iperf -c $server_test_interface -t $time > $client_file"
 
 sleep $time
 
