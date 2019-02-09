@@ -64,4 +64,5 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 
 	# End the exanic recording.
 	remote_run_script $HPTMachine hpt/stop_recording.sh
+	remote_run_script $OtherHPTMachine hpt/stop_recording.sh
 done
