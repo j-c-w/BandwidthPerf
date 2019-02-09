@@ -6,5 +6,5 @@ if [[ $# -ne 1  ]]; then
 	exit 1
 fi
 
-cd /root/jcw78/NRG-dev/sw/gui/
-python set_bandwidth.py $1
+cd /root/jcw78/NRG-dev/sw/api/
+python ../gui/set_bandwidth.py $1
