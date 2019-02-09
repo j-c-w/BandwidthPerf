@@ -18,11 +18,13 @@ compress_after=3
 source /root/jcw78/scripts/general/parse_config.sh
 source /root/jcw78/scripts/general/remote_run.sh
 # First, setup the machines
-# ./setup_size_machines.sh
+./setup_accuracy_machines.sh
 
 # Now, get the number of runs:
 runs=$(get_config_value "Runs")
 HPTMachine=$(get_config_value "MachineB")
+OtherHPTMachine=$(get_config_value "OtherHPTMachine" dual_hpt/config)
+DAGMachine=$(get_config_value "DAGMachine" hpt_vs_dag/config)
 lts_loc=$(get_config_value "LTSLocations")
 
 if [[ ${test_lists[@]} == *"--single-hpt"* ]]; then
@@ -60,17 +62,22 @@ if [[ ${test_lists[@]} == *dual-hpt* ]]; then
 
 		# This script will have compressed each one individually,
 		# meaning we only have to move the directory as a whole.
-		remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards/ /root/jcw78/nvme/hpt_accuracy_different_cards_run_$run/"
+		remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards/ /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_$run/"
+		remote_run_command $OtherHPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards/ /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_$run/"
 
 		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
-			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $OtherHPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
 			last_compress=$(( run + 1 ))
 		fi
 	done
 
 	# Move all those to the LTS device.
-	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_different_cards"
-	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_run_* $lts_loc/hpt_accuracy_different_cards"
+	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_different_cards_card_0"
+	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_* $lts_loc/hpt_accuracy_different_cards_card_0"
+
+	remote_run_command $OtherHPTMachine "mkdir -p $lts_loc/hpt_accuracy_different_cards_card_1"
+	remote_run_command $OtherHPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_* $lts_loc/hpt_accuracy_different_cards_card_1"
 fi
 
 if [[ "${test_lists[@]}" == *-hpt-dag* ]]; then
@@ -97,12 +104,12 @@ if [[ "${test_lists[@]}" == *-hpt-dag* ]]; then
 	done
 
 	# Move all those to the LTS device.
-	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_vs_dag"
-	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/hpt_accuracy_vs_dag"
+	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_hpt_accuracy_vs_dag"
+	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/hpt_hpt_accuracy_vs_dag"
 
 	# Move all those to the LTS device.
-	remote_run_command $DAGMachine "mkdir -p $lts_loc/hpt_accuracy_vs_dag"
-	remote_run_command $DAGMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/hpt_accuracy_vs_dag"
+	remote_run_command $DAGMachine "mkdir -p $lts_loc/dag_hpt_accuracy_vs_dag"
+	remote_run_command $DAGMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/dag_hpt_accuracy_vs_dag"
 fi
 
 echo "All done!"
