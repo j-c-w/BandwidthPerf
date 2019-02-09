@@ -62,6 +62,11 @@ if [[ ! -d NRG-dev ]]; then
 	git clone https://github.com/j-c-w/NRG-dev
 fi
 
+pushd /root/jcw78/NRG-dev/sw/api
+# Build the NRG APIs.
+./build_me.sh
+popd
+
 if [[ ! -d OSNT-SUME-live ]]; then
 	git clone https://github.com/NetFPGA/OSNT-SUME-live.git
 fi
