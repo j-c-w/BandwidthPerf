@@ -30,6 +30,7 @@ fi
 cp "$1" $decomp_loc
 
 new_filename="$decomp_loc/$(basename $1)"
+extracted_expcap_filename="${new_filename/.bz2/}"
 pcap_filename="${new_filename/.expcap.bz2/}"
 # Convert this into a PCAP file for proceesing with our scripts.
 /root/jcw78/scripts/general/expcap_to_pcap.sh "$new_filename" "$pcap_filename"
@@ -39,5 +40,8 @@ full_pcap_filename=$(readlink -f ${pcap_filename}_0.pcap)
 pushd /root/jcw78/process_pcap_traces/
 python inter_arrival_distribution_graph.py "$full_pcap_filename"
 popd
+
+# Remove things to clear space
+rm -f $full_pcap_filename $new_filename $extracted_expcap_filename
 
 echo "Done drawing graph for $1!"

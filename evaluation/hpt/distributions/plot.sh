@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # This takes a long time.  Fortunatley, this can be done
 # in parallel!
