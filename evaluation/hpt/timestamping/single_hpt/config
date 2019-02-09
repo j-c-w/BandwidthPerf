@@ -1,4 +1,5 @@
-NumberToSend: 1
+NumberToSend: 10000000
 MinRate: 3000
 MaxRate: 3000
-StepSize: 0
+# Do not make this zero or this will run out of heap space!
+StepSize: 100
