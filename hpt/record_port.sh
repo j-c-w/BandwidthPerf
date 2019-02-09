@@ -6,7 +6,11 @@ if [[ $# -ne 4 ]] && [[ $# -ne 5 ]]; then
 	echo "The CPUs should be a colon-separated list of three CPUs. e.g. 44:45:46"
 	exit 1
 fi
-set -x
+
+# Make sure that the port is enabled first.
+pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
+./exanic-config $1 up
+popd
 
 # The ExaNIC appears to react fine to having multiple               
 # instances running.  There is a kill script, but
