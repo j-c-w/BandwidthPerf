@@ -5,7 +5,7 @@ set -ue
 
 mkdir -p /root/jcw78
 if [[ ! -d /root/jcw78/scripts ]]; then
-	git clone https://github.com/j-c-w/BandwidthPerf scripts
+	git clone https://github.com/j-c-w/BandwidthPerf /root/jcw78/scripts
 fi
 
 echo "Pre setup done!"
