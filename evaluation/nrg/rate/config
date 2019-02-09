@@ -1,0 +1,12 @@
+MachineA: nf-server09.nf.cl.cam.ac.uk
+MachineATestIP: 192.168.0.2
+MachineB: nf-server13.nf.cl.cam.ac.uk
+MachineC: nf-server12.nf.cl.cam.ac.uk
+MachineD: nf-server10.nf.cl.cam.ac.uk
+NICA: eth1
+NICD: eth11
+Runs: 10
+MinRate: 1000
+MaxRate: 10000
+StepSize: 100
+NVMeDeviceName: /dev/nvme0n1p1
