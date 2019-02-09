@@ -21,16 +21,21 @@ if [[ ! -d $decomp_loc ]]; then
 	exit 1
 fi
 
+if [[ ! -f $1 ]]; then
+	echo "Input file $1 is not a file"
+	exit 1
+fi
+
 # Copy the file over to the decompress location.
 cp "$1" $decomp_loc
 
 new_filename="$decomp_loc/$(basename $1)"
-pcap_filename="${new_filename/.expcap.bz2/.pcap}"
+pcap_filename="${new_filename/.expcap.bz2/}"
 # Convert this into a PCAP file for proceesing with our scripts.
 /root/jcw78/scripts/general/expcap_to_pcap.sh "$new_filename" "$pcap_filename"
 
 # Now, draw the distribution graph.  Leave the graph here.
-full_pcap_filename=$(readlink -f $pcap_filename)
+full_pcap_filename=$(readlink -f ${pcap_filename}_0.pcap)
 pushd /root/jcw78/process_pcap_traces/
 python inter_arrival_distribution_graph.py "$full_pcap_filename"
 popd

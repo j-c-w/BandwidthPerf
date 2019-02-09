@@ -12,4 +12,4 @@ size_step=$(get_config_value SizeStep)
 parallelism=$(get_config_value Parallelism)
 
 # Now, get every compressed EXPCAP file in that directory.
-parallel plot_single_capture.sh {}_psize.erf-0.expcap.bz2 ::: $(seq -s' ' $min_size $size_step $max_size)
+parallel --halt 1 ./plot_single_capture.sh $lts_location/size_scan_1/{}_psize.erf-0.expcap.bz2 ::: $(seq -s' ' $min_size $size_step $max_size)
