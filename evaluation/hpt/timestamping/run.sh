@@ -66,16 +66,18 @@ if [[ ${test_lists[@]} == *dual-hpt* ]]; then
 		remote_run_command $OtherHPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards/ /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_$run/"
 
 		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
-			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
-			remote_run_command $OtherHPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $OtherHPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
 			last_compress=$(( run + 1 ))
 		fi
 	done
 
 	# Move all those to the LTS device.
+	remote_run_command $HPTMachine "rm -rf $lts_loc/hpt_accuracy_different_cards_card_0"
 	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_different_cards_card_0"
 	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_card_0_run_* $lts_loc/hpt_accuracy_different_cards_card_0"
 
+	remote_run_command $OtherHPTMachine "rm -rf $lts_loc/hpt_accuracy_different_cards_card_1"
 	remote_run_command $OtherHPTMachine "mkdir -p $lts_loc/hpt_accuracy_different_cards_card_1"
 	remote_run_command $OtherHPTMachine "mv /root/jcw78/nvme/hpt_accuracy_different_cards_card_1_run_* $lts_loc/hpt_accuracy_different_cards_card_1"
 fi
