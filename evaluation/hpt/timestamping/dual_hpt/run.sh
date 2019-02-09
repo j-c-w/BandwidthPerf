@@ -23,7 +23,7 @@ OtherHPTMachine=$(get_config_value OtherHPTMachine config)
 exa_port=$(get_config_value HPTInterface0 ../config)
 other_exa_port=$(get_config_value OtherHPTInterface0 config)
 cpus=$(get_config_value HPTCPUs0 ../config)
-other_cpus=$(get_config_value OtherCPUs config)
+other_cpus=$(get_config_value OtherHPTCPUs config)
 # Keep track of the total space used.
 total_space=0.0
 # Wire capacity in Mbps.
@@ -56,7 +56,7 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 	fi
 	# Start the exanic recording on both machines.
 	remote_run_script $HPTMachine hpt/record_port.sh $exa_port /root/jcw78/nvme/hpt_accuracy_different_cards/${rate}_joint_timing_card_0 $cpus /root/jcw78/nvme/hpt_accuracy_different_cards/${rate}_joint_timing_card_0_cmd_out
-	remote_run_script $OtherHPTMachine hpt/record_port.sh $other_exa_port /root/jcw78/nvme/hpt_accuracy_different_cards/${rate}_joint_timing_card_1 $other_cpus /root/jcw78/nvme/hpt_accyract_different_cards/${rate}_joint_timing_card_1_cmd_out
+	remote_run_script $OtherHPTMachine hpt/record_port.sh $other_exa_port /root/jcw78/nvme/hpt_accuracy_different_cards/${rate}_joint_timing_card_1 $other_cpus /root/jcw78/nvme/hpt_accuracy_different_cards/${rate}_joint_timing_card_1_cmd_out
 
 	# Run OSNT at the desired rate.
 	remote_run_script $OSNTMachine osnt/run_osnt.sh -ifp0 /root/jcw78/scripts/pcap_files/64.cap -rpn0 $num_to_send -ipg0 $ipg -run
