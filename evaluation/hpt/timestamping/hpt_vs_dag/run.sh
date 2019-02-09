@@ -55,7 +55,7 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 	fi
 	# Start the exanic recording on both machines.
 	remote_run_script $HPTMachine hpt/record_port.sh $exa_port /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_hpt $cpus /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_hpt_cmd_out
-	remote_run_script $OtherHPTMachine dag/start_dag $dag_port /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_dag /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_dag_cmd_out
+	remote_run_script $DAGMachine dag/start_dag.sh $dag_port /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_dag /root/jcw78/nvme/hpt_accuracy_vs_dag/${rate}_joint_timing_dag_cmd_out
 
 	# Run OSNT at the desired rate.
 	remote_run_script $OSNTMachine osnt/run_osnt.sh -ifp0 /root/jcw78/scripts/pcap_files/64.cap -rpn0 $num_to_send -ipg0 $ipg -run

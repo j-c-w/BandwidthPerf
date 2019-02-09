@@ -1,6 +1,6 @@
-DAGInterface: TODO
-DAGMachine: nf-test14.nf.cl.cam.ac.uk
-NumberToSend: 10000000000
+DAGInterface: 0
+DAGMachine: nf-server14.nf.cl.cam.ac.uk
+NumberToSend: 10000000
 MinRate: 10000
 MaxRate: 10000
-StepSize: 0
+StepSize: 1
