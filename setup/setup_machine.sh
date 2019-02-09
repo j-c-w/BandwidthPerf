@@ -47,6 +47,7 @@ popd
 
 # Install things on the machine.
 sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel
+pip install --upgrade pip
 python -m pip install  matplotlib --ignore-installed
 pip install statistics
 pip install numpy
