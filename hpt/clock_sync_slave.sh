@@ -13,4 +13,12 @@ pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
 
 # Then start the slave.
 ./exanic-clock-sync $1:pps &
+
+# Wait a while, then restart the slave.  It seems to give better
+# results.
+sleep 10
+pkill exanic-clock-sync
+sleep 1
+
+./exanic-clock-sync $1:pps &
 popd
