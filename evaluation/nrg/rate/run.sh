@@ -68,10 +68,8 @@ for run in $(seq 1 $runs); do
 		fi
 	done
 
-	mkdir -p $lts_location/nrg_rate
-	# Clear any old data left there.
-	rm -rf $lts_location/nrg_rate/run_$run
-	mv $lts_location/nrg_rate_data $lts_location/nrg_rate/run_$run
+	mkdir -p $lts_location/nrg_rate/run_$run
+	mv $lts_location/nrg_rate_data/* $lts_location/nrg_rate/run_$run
 done
 
 # Finally, move the captured files to the long term storage.
