@@ -1,0 +1,5 @@
+LTSLocation: /root/jcw78/lts
+HPTPort: exa0
+HPTCPUs: 44:45:46
+HPTCPUs1: 41:42:43
+HPTPort1: exa1
