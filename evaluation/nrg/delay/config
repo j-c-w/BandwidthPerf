@@ -1,0 +1,7 @@
+MachineA: nf-server13.nf.cl.cam.ac.uk
+MachineB: nf-server06.nf.cl.cam.ac.uk
+MachineC: nf-server12.nf.cl.cam.ac.uk
+Runs: 5
+NumPackets: 1000000
+Rate: 2000
+NVMeDeviceName: /dev/nvme0n1p1
