@@ -75,7 +75,7 @@ for run in $(seq 1 $runs); do
 		remote_run_script $HPTMachine hpt/stop_recording.sh
 
 		files_to_compress+=${file}-0.expcap
-		files_to_compress+=${file1}-1.expcap
+		files_to_compress+=${file1}-0.expcap
 		if [[ ${#files_to_compress} -gt 10 ]]; then
 			remote_run_script $HPTMachine general/parallel_compress.sh $files_to_compress
 			unset files_to_compress
