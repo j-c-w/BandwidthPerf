@@ -51,6 +51,7 @@ pip install --upgrade pip
 python -m pip install  matplotlib --ignore-installed
 pip install statistics
 pip install numpy
+pip install scipy
 
 # Get the PCAP parsing scripts
 if [[ ! -d process_pcap_traces ]]; then
