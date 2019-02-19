@@ -12,6 +12,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 for arg in "$@"; do
+	remote_run_command $arg "rm -rf ~/benchmark"
 	scp -r /root/jcw78/SUMMER2017/apps/benchmark/ $arg:~/benchmark
 	default_nic=$(get_config_value $arg)
 	remote_run_script "$arg" apps/replacement_sed.sh "$default_nic"
