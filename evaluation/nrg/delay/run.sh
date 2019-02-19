@@ -58,8 +58,9 @@ for run in $(seq 1 $runs); do
 		fi
 
 		# Setup the NRG.
-		set -x
 		remote_run_script $NRGMachine nrg/set_delay.sh $delay
+		# Make sure that the NRG has time to get setup
+		sleep 1
 
 		file=/root/jcw78/nvme/nrg_delay/${delay}_run_$run
 		file1=/root/jcw78/nvme/nrg_delay/${delay}_run_${run}_delayed
