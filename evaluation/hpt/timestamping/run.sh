@@ -46,6 +46,7 @@ if [[ ${test_lists[@]} == *"--single-hpt"* ]]; then
 	done
 	# Copy all those files to the long term storage device.
 	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_accuracy_same_card"
+	remote_run_command $HPTMachine "rm -rf $lts_loc/hpt_accuracy_same_card/hpt_accuracy_same_card_run_*"
 	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_same_card_run_* $lts_loc/hpt_accuracy_same_card"
 fi
 
@@ -100,17 +101,19 @@ if [[ "${test_lists[@]}" == *-hpt-dag* ]]; then
 
 		if (( run % compress_after == 0 )) || [[ $run == $runs ]]; then
 			remote_run_command $HPTMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
-			remote_run_command $DAGMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}/*.expcap' ::: $(seq -s' ' $last_compress $run)"
+			remote_run_command $DAGMachine "cd /root/jcw78/nvme; parallel 'cd /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}; bzip2 /root/jcw78/nvme/hpt_accuracy_vs_dag_run_{}/*.erf' ::: $(seq -s' ' $last_compress $run)"
 			last_compress=$((run + 1))
 		fi
 	done
 
 	# Move all those to the LTS device.
 	remote_run_command $HPTMachine "mkdir -p $lts_loc/hpt_hpt_accuracy_vs_dag"
+	remote_run_command $HPTMachine "rm -rf $lts_loc/hpt_hpt_accuracy_vs_dag/hpt_accuracy_vs_dag_run_*"
 	remote_run_command $HPTMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/hpt_hpt_accuracy_vs_dag"
 
 	# Move all those to the LTS device.
 	remote_run_command $DAGMachine "mkdir -p $lts_loc/dag_hpt_accuracy_vs_dag"
+	remote_run_command $DAGMachine "rm -rf $lts_loc/dag_hpt_accuracy_vs_dag/hpt_accuracy_vs_dag_run_*"
 	remote_run_command $DAGMachine "mv /root/jcw78/nvme/hpt_accuracy_vs_dag_run_* $lts_loc/dag_hpt_accuracy_vs_dag"
 fi
 
