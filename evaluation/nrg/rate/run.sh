@@ -24,7 +24,10 @@ step_size=$(get_config_value "StepSize")
 
 iperf1_mach=$(get_config_value "MachineA")
 iperf1_mach_test_interface=$(get_config_value "MachineATestIP")
+iperf1_mach_interface=$(get_config_value "NICA")
 iperf2_mach=$(get_config_value "MachineD")
+iperf2_mach_test_interface=$(get_config_value "MachineDTestIP")
+iperf2_mach_interface=$(get_config_value "NICD")
 HPTMachine=$(get_config_value "MachineC")
 NRGMachine=$(get_config_value "MachineB")
 
@@ -34,6 +37,11 @@ cpus=$(get_config_value "HPTCPUs" ../config)
 
 # Stop any recording that might be going on:
 remote_run_script $HPTMachine hpt/stop_recording.sh
+
+# Make sure the interfaces have the right IP addresses:
+remote_run_command $iperf1_mach "ifconfig $iperf1_mach_interface up $iperf1_mach_test_interface"
+remote_run_command $iperf2_mach "ifconfig $iperf2_mach_interface up $iperf2_mach_test_interface"
+
 for run in $(seq 1 $runs); do
 	for rate in $(seq $min_rate $step_size $max_rate); do
 		echo  "Starting run $run at rate $rate"
@@ -44,6 +52,8 @@ for run in $(seq 1 $runs); do
 		# Setup the NRG.
 		set -x
 		remote_run_script $NRGMachine nrg/set_rate.sh $(( $rate / 1000.0 ))
+		# Make sure that the NRG has time to get set  up.
+		sleep 1
 
 		file=/root/jcw78/nvme/nrg_rate/${rate}_run_$run
 		# Start the HPT recording.
@@ -68,6 +78,12 @@ for run in $(seq 1 $runs); do
 		fi
 	done
 
+	# Compress any files left to do:
+	if [[ ${#files_to_compress} -gt 0 ]]; then
+		remote_run_script $HPTMachine general/parallel_compress.sh $files_to_compress
+		unset files_to_compress
+		typeset -a files_to_compress
+	fi
 	mkdir -p $lts_location/nrg_rate/run_$run
 	mv $lts_location/nrg_rate_data/* $lts_location/nrg_rate/run_$run
 done
