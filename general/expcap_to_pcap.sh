@@ -2,6 +2,7 @@
 
 if [[ $# -ne 2 ]]; then
 	echo "Usage $0 <input file .expcap> <output file .pcap>"
+	exit 1
 fi
 
 infile="$1"
