@@ -47,7 +47,10 @@ popd
 
 # Install things on the machine.
 sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel
+sleep 1
 pip install --upgrade pip
+# Attempt to avoid issues with 'main' not found.
+sleep 2
 python -m pip install  matplotlib --ignore-installed
 pip install statistics
 pip install numpy
@@ -81,15 +84,6 @@ popd
 if [[ ! -d SUMMER2017 ]]; then
 	git clone https://github.com/j-c-w/SUMMER2017
 fi
-
-# Get the DPTK project and install it:
-if [[ ! -d dptk ]]; then
-	git clone https://github.com/kbandla/dpkt
-fi
-
-pushd /root/jcw78/dptk
-python setup.py install
-popd
 
 # Copy the local bitfiles to the top level.
 cp /root/jcw78/scripts/bitfiles/* /root/jcw78
