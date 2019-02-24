@@ -1,11 +1,18 @@
 #!/bin/bash
 
+set -eu
 if [[ $# -ne 1 ]]; then
 	echo "Usage: $0 <device name>"
 	exit 1
 fi
 
-pkill exanic-clock-sync
+# Make sure that NTP has started.
+/root/jcw78/scripts/hpt/ntp_enable.sh
+
+# And then sync to the host.
+/root/jcw78/scripts/hpt/clock_sync_to_host.sh $1
+
+pkill exanic-clock-sy || echo "Clock sync not running already"
 
 pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
 # Make sure that the PPS master pulse is off
@@ -14,11 +21,5 @@ pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
 # Then start the slave.
 ./exanic-clock-sync $1:pps &
 
-# Wait a while, then restart the slave.  It seems to give better
-# results.
 sleep 10
-pkill exanic-clock-sync
-sleep 1
-
-./exanic-clock-sync $1:pps &
 popd
