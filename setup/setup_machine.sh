@@ -104,11 +104,13 @@ echo "Done generating PCAP files."
 pushd /root/jcw78/scripts/hpt_setup
 # First make the generic repository:
 pushd exanic-software
+make clean
 make
 sudo make install
 popd
 # Then make the exanic-exact stuff:
 pushd exanic-exact/exact-capture-1.0RC/
+make clean
 make
 sudo make install
 
