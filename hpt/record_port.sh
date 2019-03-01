@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 if [[ $# -ne 4 ]] && [[ $# -ne 5 ]]; then
 	echo "Usage: <port> <output capture file> <cpus list (see exanic documentation)> <command line output file>"
 	echo "Usage: <port 1> <port 2> <output capture file> <cpus list (see exanic documentation)> <command line output file>"
