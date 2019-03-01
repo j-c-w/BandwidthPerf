@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -eu
+
+typeset -a no_clean
+zparseopts -D -E -no-clean=no_clean
 
 if [[ $# -ne 3 ]]; then
 	echo "Usage $0 <run no> <lts loc> <decompression location>"
@@ -36,12 +39,14 @@ popd
 echo "Done... Cleaning up!"
 
 # Delete the extracted expcap files:
-rm -f $3/different_cards_run_${run}_card_0.pcap
-rm -f $3/different_cards_run_${run}_card_1.pcap
-rm -f $3/different_cards_run_${run}_card_0.csv
-rm -f $3/different_cards_run_${run}_card_1.csv
-rm -f $3/different_cards_run_${run}_card_0.expcap.bz
-rm -f $3/different_cards_run_${run}_card_1.expcap.bz
-rm -f $3/different_cards_run_${run}_card_0.expcap
-rm -f $3/different_cards_run_${run}_card_1.expcap
+if [[ ${#no_clean} == 0 ]]; then
+	rm -f $3/different_cards_run_${run}_card_0.pcap
+	rm -f $3/different_cards_run_${run}_card_1.pcap
+	rm -f $3/different_cards_run_${run}_card_0.csv
+	rm -f $3/different_cards_run_${run}_card_1.csv
+	rm -f $3/different_cards_run_${run}_card_0.expcap.bz
+	rm -f $3/different_cards_run_${run}_card_1.expcap.bz
+	rm -f $3/different_cards_run_${run}_card_0.expcap
+	rm -f $3/different_cards_run_${run}_card_1.expcap
+fi
 echo "Done!"
