@@ -28,27 +28,13 @@ exanic-config exanic0
 
 # Check that the firmware is the right date:
 pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
-fm_date=$(./exanic-config | grep -ce 'Firmware date: 20180221 ')
+echo "Finding firmware date"
+fm_date=$(./exanic-config | grep -ce 'Firmware date: 20180221 ' || true)
 popd
+echo "Firmware date found ($fm_date)"
 if [[ $fm_date == 0 ]]; then
-	# Now, get the firmware and install it.
-	if [[ ! -f exanic_hpt_20180221.fw.gz ]]; then
-		wget https://exablaze.com/downloads/exanic/exanic_hpt_20180221.fw.gz
-	fi
-
-	if [[ ! -f exanic_hpt_20180221.fw ]]; then
-		gzip -d exanic_hpt_20180221.fw.gz
-	fi
-
-	# Now, install that firmware.
-	firmware_loc="$PWD/exanic_hpt_20180221.fw"
-	pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
-	./exanic-fwupdate -d exanic0 -r $firmware_loc
-	# Note that the system needs a reboot now, so
-	# exit with an error, inform the user and then wait.
-	echo "$(hostname) NOW NEEDS TO BE REBOOTED.  Re-run this script after reboot."
-	# Exit with an error to make sure all scripts stop.
-	exit 1
+	echo "Installing new firmware"
+	./update_exanic_firmware.sh
 fi
 
 # Install any python software needed.
