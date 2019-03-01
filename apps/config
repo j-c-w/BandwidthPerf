@@ -1,4 +1,8 @@
 nf-server10.nf.cl.cam.ac.uk: eth11
 nf-server09.nf.cl.cam.ac.uk: eth1
-nf-server08.nf.cl.cam.ac.uk: eth3
-nf-server07.nf.cl.cam.ac.uk: eth3
+nf-server08.nf.cl.cam.ac.uk: ens10f0
+nf-server07.nf.cl.cam.ac.uk: ens10f0
+runs: 10
+ResultsDirectory: /root/data
+LTSLocation: /root/jcw78/lts
+nrg_machine: nf-server13.nf.cl.cam.ac.uk
