@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 set -ue
+set -x
 
 zmodload zsh/mathfunc
 
@@ -38,6 +39,7 @@ remote_run_script $OtherHPTMachine hpt/stop_recording.sh
 # Start the synchronization:
 remote_run_script $HPTMachine hpt/clock_sync_master.sh exanic0
 remote_run_script $OtherHPTMachine hpt/clock_sync_slave.sh exanic0 &
+echo "Waiting for clocks to sync..."
 sleep 25
 echo "PPS synchronization started"
 
@@ -73,5 +75,5 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 	remote_run_script $OtherHPTMachine hpt/stop_recording.sh
 done
 
-remote_run_script $HPTMachine hpt/clock_sync_kill.sh
-remote_run_script $OtherHPTMachine hpt/clock_sync_kill.sh
+remote_run_script $HPTMachine hpt/clock_sync_kill.sh exanic0
+remote_run_script $OtherHPTMachine hpt/clock_sync_kill.sh exanic0
