@@ -39,3 +39,6 @@ fi
 
 # Install any python software needed.
 python -m pip install -U matplotlib
+
+# Make sure that the DFS is turned off:
+./disable_freq_scaling.sh
