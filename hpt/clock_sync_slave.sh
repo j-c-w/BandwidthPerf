@@ -19,7 +19,7 @@ pushd /root/jcw78/scripts/hpt_setup/exanic-software/util/
 ./exanic-config $1 pps-out off
 
 # Then start the slave.
-./exanic-clock-sync $1:pps &
+./exanic-clock-sync $1:pps-no-term &
 
 sleep 10
 popd
