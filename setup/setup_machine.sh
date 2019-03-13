@@ -46,7 +46,7 @@ make
 popd
 
 # Install things on the machine.
-sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel cpufrequtils alien
+sudo apt install python-tk python-pip pbzip2 scapy nfs-common parallel cpufrequtils alien dkms
 sleep 1
 pip install --upgrade pip
 # Attempt to avoid issues with 'main' not found.
