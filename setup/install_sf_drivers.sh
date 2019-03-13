@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 if [[ $# -ne 1 ]]; then
 	echo "Usage $0 <SF driver zip>"
 	exit 1
