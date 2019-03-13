@@ -15,3 +15,6 @@ alien -c *.noarch.rpm
 
 # And install
 dpkg -i *.deb
+
+rmmod sfc || true
+modprobe sfc
