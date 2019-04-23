@@ -6,8 +6,8 @@ HPTInterface1: ens8d1
 # These CPUS should be as described in the ExanicExact documentation: basically, close to the NVMe and the ExaNIC.
 # They should definitely be different CPUs, since both
 # ports can be running at the same time.
-HPTCPUs0: 7:8:9
-HPTCPUs1: 10:11:12
+HPTCPUs0: 7:8,9:10,11,12
+HPTCPUs1: 1:2,3:4,5,6
 # Note that the NVMe device must be formatted etc.
 # Should be at least 2TB.
 NVMeDeviceName:  /dev/nvme0n1p1

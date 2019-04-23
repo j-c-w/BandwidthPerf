@@ -1,17 +1,17 @@
 # This is a config file.
-MachineA: nf-server13.nf.cl.cam.ac.uk
-MachineB: nf-server12.nf.cl.cam.ac.uk
-HPTInterface0: exa0
-HPTInterface1: exa1
+MachineA: nf-server06.nf.cl.cam.ac.uk
+MachineB: nf-server14.nf.cl.cam.ac.uk
+HPTInterface0: ens6
+HPTInterface1: ens6d1
 # These CPUS should be as described in the ExanicExact documentation: basically, close to the NVMe and the ExaNIC.
 # They should definitely be different CPUs, since both
 # ports can be running at the same time.
-HPTCPUs0: 44:45:46
-HPTCPUs1: 47:48:49
-HPTCPUsBoth: 44:47,45:48,46,49
+HPTCPUs0: 1:2:3
+HPTCPUs1: 1:2:3
+HPTCPUsBoth: 1:2,3:4,5,6,6,7,8,9,10,11,12
 # Note that the NVMe device must be formatted etc.
 # Should be at least 2TB.
-NVMeDeviceName:  /dev/nvme0n1p1
+NVMeDeviceName:  None
 # This may be the normal HD or an external disk.
 # Files are generally compressed before being stored
 # here.

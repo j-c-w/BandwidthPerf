@@ -1,7 +1,7 @@
 OtherHPTMachine: nf-server14.nf.cl.cam.ac.uk
-OtherHPTInterface0: ens6
+OtherHPTInterface0: ens8
 OtherNVMeDeviceName: None
-OtherHPTCPUs: 7:8:9
+OtherHPTCPUs: 1:2,3:4,5,6
 NumberToSend: 10000000
 MinRate: 10000
 MaxRate: 10000

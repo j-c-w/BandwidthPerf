@@ -10,6 +10,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 source /root/jcw78/scripts/general/parse_config.sh
+source /root/jcw78/scripts/general/remote_run.sh
 
 runs=$(get_config_value runs)
 lts_directory=$(get_config_value LTSLocation)
@@ -28,6 +29,13 @@ for run in $(seq 1 $runs); do
 	# Make sure that the benchmark doesn't already happen 
 	# to be running
 	./run.sh stop $benchmark || echo "Not already running"
+	sleep 1
+	# Clear any old results from the results directories:
+	echo "Clearing old results..."
+	for machine in ${machines[@]}; do
+		remote_run_command $machine "rm -rf $results_directory"
+	done
+	echo "Old results cleared... Starting  new run"
 	./run.sh start $benchmark
 	# Make sure the servers have really started
 	sleep 1

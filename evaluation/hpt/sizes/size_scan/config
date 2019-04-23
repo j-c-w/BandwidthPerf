@@ -1,4 +1,4 @@
 NumberToSend: 10000000
-MinSize: 1156
-MaxSize: 1514
-StepSize: 1
+MinSize: 124
+MaxSize: 224
+StepSize: 10

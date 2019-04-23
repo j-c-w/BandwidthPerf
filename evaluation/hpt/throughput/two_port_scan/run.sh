@@ -31,6 +31,7 @@ packet_length=64
 # Before we start, make sure that all existing recording
 # is killed:
 remote_run_script $HPTMachine hpt/stop_recording.sh
+typeset -a files_to_compress
 
 for rate in $(seq $starting_rate $increase $final_rate); do
 	echo "Capturing at $rate Mbps"
@@ -60,4 +61,11 @@ for rate in $(seq $starting_rate $increase $final_rate); do
 
 	# End the exanic recording.
 	remote_run_script $HPTMachine hpt/stop_recording.sh
+
+	files_to_compress+=/root/jcw78/nvme/two_port_scan/${rate}_two_port.erf 
+	if [[ ${#files_to_compress} -gt 10 ]]; then
+		# Compress all of them.
+		remote_run_command $HPTMachine "parallel bzip2 -f {} ::: $files_to_compress"
+		files_to_compress=()
+	fi
 done

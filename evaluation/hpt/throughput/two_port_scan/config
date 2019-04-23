@@ -3,4 +3,4 @@ NumberToSend: 100000000
 # both ports.
 MinRate: 3000
 MaxRate: 10000
-StepSize: 100
+StepSize: 500

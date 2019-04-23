@@ -37,10 +37,10 @@ remote_run_script $HPTMachine hpt/stop_recording.sh
 remote_run_script $OtherHPTMachine hpt/stop_recording.sh
 
 # Start the synchronization:
-remote_run_script $HPTMachine hpt/clock_sync_master.sh exanic0
+remote_run_script $HPTMachine hpt/clock_sync_slave.sh exanic0 &
 remote_run_script $OtherHPTMachine hpt/clock_sync_slave.sh exanic0 &
 echo "Waiting for clocks to sync..."
-sleep 25
+sleep 60
 echo "PPS synchronization started"
 
 for rate in $(seq $starting_rate $increase $final_rate); do
