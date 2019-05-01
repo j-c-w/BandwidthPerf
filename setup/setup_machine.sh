@@ -113,6 +113,7 @@ pushd exanic-exact/exact-capture-1.0RC/
 make clean
 make
 sudo make install
+popd
 
 # Make sure vivado is installed:
 if [[ ! -d $VIVADO_LOC ]]; then
