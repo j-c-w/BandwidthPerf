@@ -1,9 +1,40 @@
 # This file is formatted as:
 # 		<run label (a string to destribe the folder> <number of machines to use> <apps ...>
+#  Note that 2 is the minimum number of machines, i.e. one server and one client.
 # So, to run memcached and apache at the same time using two machines
 # and put it into
 # a folder memcached_apache_joint, the line is:
-# memcached_apache_joint 2 memcached apache
+
+memcached 2 memcached
+tensorflow 2 tensorflow
+apache 2 apache
+dns 2 dns
+hadoop 2 hadoop
+
+memcached 3 memcached
+tensorflow 3 tensorflow
+apache 3 apache
+dns 3 dns
+hadoop 3 hadoop
+
+memcached 4 memcached
+tensorflow 4 tensorflow
+apache 4 apache
+dns 4 dns
+hadoop 4 hadoop
+
+memcached 5 memcached
+tensorflow 5 tensorflow
+apache 5 apache
+dns 5 dns
+hadoop 5 hadoop
+
+memcached 6 memcached
+tensorflow 6 tensorflow
+apache 6 apache
+dns 6 dns
+hadoop 6 hadoop
+
 memcached 7 memcached
 tensorflow 7 tensorflow
 apache 7 apache
