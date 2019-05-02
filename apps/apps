@@ -1,1 +1,36 @@
-memcached apache
+# This file is formatted as:
+# 		<run label (a string to destribe the folder> <number of machines to use> <apps ...>
+# So, to run memcached and apache at the same time using two machines
+# and put it into
+# a folder memcached_apache_joint, the line is:
+# memcached_apache_joint 2 memcached apache
+memcached 7 memcached
+tensorflow 7 tensorflow
+apache 7 apache
+dns 7 dns
+hadoop 7 hadoop
+
+memcached_apache_joint 7 memcached apache
+memcached_tensorflow_joint 7 memcached tensorflow
+memcached_dns_joint 7 memcached dns
+memcached_hadoop_joint 7 memcached hadoop
+
+apache_memcached_joint 7 apache memcached
+apache_tensorflow_joint 7 apache tensorflow
+apache_dns_joint 7 apache dns
+apache_hadoop_joint 7 apache hadoop
+
+tensorflow_memcached_joint 7 tensorflow memcached
+tensorflow_apache_joint 7 tensorflow apache
+tensorflow_dns_joint 7 tensorflow dns
+tensorflow_hadoop_joint 7 tensorflow hadoop
+
+dns_memcached_joint 7 dns memcached
+dns_apache_joint 7 dns apache
+dns_tensorflow_joint 7 dns tensorflow
+dns_hadoop_joint 7 dns hadoop
+
+hadoop_memcached_joint 7 hadoop memcached
+hadoop_apache_joint 7 hadoop apache
+hadoop_tensorflow_joint 7 hadoop tensorflow
+hadoop_dns_joint 7 hadoop dns
