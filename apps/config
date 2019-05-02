@@ -5,6 +5,6 @@ nf-server07.nf.cl.cam.ac.uk: ens10f0
 nf-server02.nf.cl.cam.ac.uk: ens4f0
 nf-server05.nf.cl.cam.ac.uk: ens10f1
 runs: 10
-ResultsDirectory: /root/data
+ResultsDirectory: /data
 LTSLocation: /root/jcw78/lts
 nrg_machine: nf-server13.nf.cl.cam.ac.uk
