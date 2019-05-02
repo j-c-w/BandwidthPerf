@@ -2,6 +2,7 @@ nf-server10.nf.cl.cam.ac.uk: ens2f1
 nf-server09.nf.cl.cam.ac.uk: ens2f0
 nf-server08.nf.cl.cam.ac.uk: ens10f0
 nf-server07.nf.cl.cam.ac.uk: ens10f0
+nf-server01.nf.cl.cam.ac.uk: ens2f1
 nf-server02.nf.cl.cam.ac.uk: ens4f0
 nf-server05.nf.cl.cam.ac.uk: ens10f1
 runs: 10
