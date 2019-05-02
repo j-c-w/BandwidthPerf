@@ -42,6 +42,11 @@ for run in $(seq 1 $runs); do
 	./run.sh run $benchmark
 	sleep 1
 
+	./run.sh stop $benchmark || echo "Nothing to kill"
+
+	sleep 3
+
+
 	echo "Run done!"
 
 	# Get the files from each machine.  If they don't exist,
@@ -53,10 +58,6 @@ for run in $(seq 1 $runs); do
 	done
 
 	# Stop everything
-	./run.sh stop $benchmark || echo "Nothing to kill"
-
-	sleep 3
-
 	# Also get the log information and the host information.
 	for machine in ${machines[@]}; do
 		scp $machine:~/hostinfo $lts_directory/apps_capture/$benchmark/${num_machines}_machines/run/run_$run/$machine || echo "Machine $machine did not dump host information"
