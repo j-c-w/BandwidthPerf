@@ -132,6 +132,7 @@ for run in $(seq 1 $runs); do
 
 	# Also get the log information and the host information.
 	for machine in ${machines[@]}; do
+		echo "Getting log files from $machine"
 		scp $machine:~/hostinfo $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine || echo "Machine $machine did not dump host information"
 		scp -r $machine:~/logs $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
 	done
