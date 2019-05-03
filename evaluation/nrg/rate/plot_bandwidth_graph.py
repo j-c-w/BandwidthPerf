@@ -14,6 +14,8 @@ with open(sys.argv[1]) as f:
 
 # To allow for conversion between rates.
 rates_conversion = {
+    'Pbits/sec': 1000000000,
+    'Tbits/sec': 1000000,
     'Gbits/sec': 1000,
     'Mbits/sec': 1.0,
     'Kbits/sec': 0.001,
