@@ -28,7 +28,7 @@ set -x
 # Start the server:
 remote_run_command $server "iperf -s > $server_file &" &
 # Make sure the server has actually started
-sleep 1
+sleep 3
 remote_run_command $client "iperf -c $server_test_interface -t $time > $client_file"
 
 sleep $time
