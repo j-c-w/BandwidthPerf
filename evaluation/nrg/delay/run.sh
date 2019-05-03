@@ -7,14 +7,15 @@ source /root/jcw78/scripts/general/parse_config.sh
 source /root/jcw78/scripts/general/remote_run.sh
 
 typeset -a dry_run
-zparseopts -D -E -dry-run=dry_run
+typeset -a no_setup
+zparseopts -D -E -dry-run=dry_run -no-setup=no_setup
 if [[ $# -ne 0 ]]; then
 	echo "Expected no arguments"
 	exit 1
 fi
 
-if [[ ${#dry_run} -eq 0 ]]; then
-	# ./setup_nrg_machines.sh
+if [[ ${#dry_run} -eq 0 ]] && [[ ${#no_setup} -eq 0 ]]; then
+	./setup_nrg_machines.sh
 fi
 
 runs=$(get_config_value "Runs")
