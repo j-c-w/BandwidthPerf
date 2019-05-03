@@ -5,3 +5,5 @@ Runs: 5
 NumPackets: 1000000
 Rate: 2000
 NVMeDeviceName: /dev/nvme0n1p1
+LTSLocation: /root/jcw78/lts
+TempStorageLocation: /root/jcw78/tmp

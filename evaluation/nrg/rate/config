@@ -1,13 +1,20 @@
-MachineA: nf-server10.nf.cl.cam.ac.uk
+# First Iperf machine
+MachineA: nf-server02.nf.cl.cam.ac.uk
 MachineATestIP: 192.168.0.3
-MachineB: nf-server13.nf.cl.cam.ac.uk
+# NRG machine
+MachineB: nf-server06.nf.cl.cam.ac.uk
+# HPT Machine.
 MachineC: nf-server12.nf.cl.cam.ac.uk
-MachineD: nf-server09.nf.cl.cam.ac.uk
+# Second Iperf machine
+MachineD: nf-server01.nf.cl.cam.ac.uk
 MachineDTestIP: 192.168.0.2
-NICA: eth1
-NICD: eth11
-Runs: 1
+NICA: ens4f0
+NICD: ens2f0
+Runs: 5
 MinRate: 50
 MaxRate: 10000
 StepSize: 50
+IPerfRunLength: 20
+# Should we use the HPT to capture?  (note you will need a different physical setup if this is True)
+Record: False
 NVMeDeviceName: /dev/nvme0n1p1
