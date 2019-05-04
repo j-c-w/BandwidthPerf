@@ -1,67 +1,71 @@
 # This file is formatted as:
-# 		<run label (a string to destribe the folder> <number of machines to use> <apps ...>
+# 		<run label (a string to destribe the folder> <number of machines to use> <NRG latency (ns), None if disabled> <NRG bandwidth (Mbps), None if disabled> <apps ...>
 #  Note that 2 is the minimum number of machines, i.e. one server and one client.
-# So, to run memcached and apache at the same time using two machines
+# So, to run memcached and apache at the same time using two machines with no NRG setup,
 # and put it into
 # a folder memcached_apache_joint, the line is:
+# memcached_apache_joint 2 None None memcached apache
 
-memcached 2 memcached
-tensorflow 2 tensorflow
-apache 2 apache
-dns 2 dns
-hadoop 2 hadoop
+# To run tensorflow on 7 machines with added latency of 5ns:
+# tensorflow_5ns_latency 7 5 None tensorflow
 
-memcached 3 memcached
-tensorflow 3 tensorflow
-apache 3 apache
-dns 3 dns
-hadoop 3 hadoop
+# memcached 2 None None memcached
+# tensorflow 2 None None tensorflow
+# apache 2 None None apache
+# dns 2 None None dns
+# hadoop 2 None None hadoop
 
-memcached 4 memcached
-tensorflow 4 tensorflow
-apache 4 apache
-dns 4 dns
-hadoop 4 hadoop
+# memcached 3 None None memcached
+# tensorflow 3 None None tensorflow
+# apache 3 None None apache
+# dns 3 None None dns
+# hadoop 3 None None hadoop
 
-memcached 5 memcached
-tensorflow 5 tensorflow
-apache 5 apache
-dns 5 dns
-hadoop 5 hadoop
+# memcached 4 None None memcached
+# tensorflow 4 None None tensorflow
+# apache 4 None None apache
+# dns 4 None None dns
+# hadoop 4 None None hadoop
 
-memcached 6 memcached
-tensorflow 6 tensorflow
-apache 6 apache
-dns 6 dns
-hadoop 6 hadoop
+# memcached 5 None None memcached
+# tensorflow 5 None None tensorflow
+# apache 5 None None apache
+# dns 5 None None dns
+# hadoop 5 None None hadoop
 
-memcached 7 memcached
-tensorflow 7 tensorflow
-apache 7 apache
-dns 7 dns
-hadoop 7 hadoop
+# memcached 6 None None memcached
+# tensorflow 6 None None tensorflow
+# apache 6 None None apache
+# dns 6 None None dns
+# hadoop 6 None None hadoop
 
-memcached_apache_joint 7 memcached apache
-memcached_tensorflow_joint 7 memcached tensorflow
-memcached_dns_joint 7 memcached dns
-memcached_hadoop_joint 7 memcached hadoop
+# memcached 7 None None memcached
+tensorflow 7 None None tensorflow
+apache 7 None None apache
+dns 7 None None dns
+hadoop 7 None None hadoop
 
-apache_memcached_joint 7 apache memcached
-apache_tensorflow_joint 7 apache tensorflow
-apache_dns_joint 7 apache dns
-apache_hadoop_joint 7 apache hadoop
+memcached_apache_joint 7 None None memcached apache
+memcached_tensorflow_joint 7 None None memcached tensorflow
+memcached_dns_joint 7 None None memcached dns
+memcached_hadoop_joint 7 None None None None memcached hadoop
 
-tensorflow_memcached_joint 7 tensorflow memcached
-tensorflow_apache_joint 7 tensorflow apache
-tensorflow_dns_joint 7 tensorflow dns
-tensorflow_hadoop_joint 7 tensorflow hadoop
+apache_memcached_joint 7 None None apache memcached
+apache_tensorflow_joint 7 None None apache tensorflow
+apache_dns_joint 7 None None apache dns
+apache_hadoop_joint 7 None None None None apache hadoop
 
-dns_memcached_joint 7 dns memcached
-dns_apache_joint 7 dns apache
-dns_tensorflow_joint 7 dns tensorflow
-dns_hadoop_joint 7 dns hadoop
+tensorflow_memcached_joint 7 None None tensorflow memcached
+tensorflow_apache_joint 7 None None tensorflow apache
+tensorflow_dns_joint 7 None None tensorflow dns
+tensorflow_hadoop_joint 7 None None None None tensorflow hadoop
 
-hadoop_memcached_joint 7 hadoop memcached
-hadoop_apache_joint 7 hadoop apache
-hadoop_tensorflow_joint 7 hadoop tensorflow
-hadoop_dns_joint 7 hadoop dns
+dns_memcached_joint 7 None None dns memcached
+dns_apache_joint 7 None None dns apache
+dns_tensorflow_joint 7 None None dns tensorflow
+dns_hadoop_joint 7 None None None None dns hadoop
+
+hadoop_memcached_joint 7 None None hadoop memcached
+hadoop_apache_joint 7 None None hadoop apache
+hadoop_tensorflow_joint 7 None None hadoop tensorflow
+hadoop_dns_joint 7 None None hadoop dns
