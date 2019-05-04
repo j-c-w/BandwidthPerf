@@ -1,12 +1,14 @@
 #!/bin/zsh
 
-set -x
 set -eu
 zmodload zsh/mapfile
 
 # This script runs the benchmark passed.
 if [[ $# -lt 3 ]]; then
 	echo "Usage $0 <benchmark (s)> (...) <number of machines> <label>"
+	echo "--dry-run to not actually run"
+	echo "--no-capture to disable capture"
+	echo "--no-reboot to not reboot the benchmarking machines before running"
 	exit 1
 fi
 
@@ -15,12 +17,14 @@ source /root/jcw78/scripts/general/remote_run.sh
 
 typeset -a dry_run
 typeset -a no_capture
-zparseopts -D -E -dry-run=dry_run -no-capture=no_capture
+typeset -a no_reboot
+zparseopts -D -E -dry-run=dry_run -no-capture=no_capture -no-reboot=no_reboot
 
 runs=$(get_config_value runs)
 lts_directory=$(get_config_value LTSLocation)
 results_directory=$(get_config_value ResultsDirectory)
 timeout_limit=$(get_config_value TimeoutLimit)
+reboot_time=$(get_config_value RebootTime)
 
 typeset -a benchmarks
 
@@ -64,6 +68,15 @@ for benchmark in "${benchmarks[@]}"; do
 done
 
 for run in $(seq 1 $runs); do
+	# Reboot the machines we are using and give them time
+	# to turn on.  (Unless this was disabled)
+	if [[ ${#no_reboot} == 0 ]]; then
+		echo "Starting machine reboot..."
+		/root/jcw78/scripts/apps/reboot_machines.sh ${machines[@]:0:$num_machines}
+		sleep $reboot_time
+		echo "Reboot done!"
+	fi
+
 	# Make sure that the benchmark doesn't already happen 
 	# to be running
 	for benchmark in "${benchmarks[@]}"; do
