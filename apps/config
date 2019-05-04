@@ -8,4 +8,7 @@ nf-server05.nf.cl.cam.ac.uk: ens10f1
 runs: 10
 ResultsDirectory: /data
 LTSLocation: /root/jcw78/lts
-nrg_machine: nf-server13.nf.cl.cam.ac.uk
+NRGMachine: nf-server06.nf.cl.cam.ac.uk
+# The maximum amount fo time we let a benchmark run for. (In seconds).  After that, the benchmark is killed and an error is noted.
+# We apply the same limit to the setup and the stop phases.
+TimeoutLimit: 1200

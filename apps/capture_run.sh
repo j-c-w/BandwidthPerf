@@ -20,6 +20,7 @@ zparseopts -D -E -dry-run=dry_run -no-capture=no_capture
 runs=$(get_config_value runs)
 lts_directory=$(get_config_value LTSLocation)
 results_directory=$(get_config_value ResultsDirectory)
+timeout_limit=$(get_config_value TimeoutLimit)
 
 typeset -a benchmarks
 
@@ -38,7 +39,8 @@ echo "Running benchmarks: $benchmarks"
 
 typeset -a machines
 machines=($(cat < machines))
-echo "Running apps on ${#machines} machines"
+echo "Running apps on ${#machines} total machines"
+echo "Requested use of $num_machines of them"
 typeset -a capture_machines
 capture_machines=($(cat < capture_machines))
 echo "Running capture cards on ${#capture_machines} machines"
@@ -78,6 +80,8 @@ for run in $(seq 1 $runs); do
 		for machine in ${capture_machines[@]}; do
 			# Kill any ongoing recording going on:
 			remote_run_script $machine hpt/stop_recording.sh
+			# Clear the capture location. (But don't delete the location itself).
+			remote_run_command $machine "rm -rf $capture_location/*"
 			# Get the interfaces/CPUs we are using on those machines.
 			use_both=$(get_config_value "${machine}_both_ports" /root/jcw78/scripts/apps/capture_config)
 			# TODO -- IT WOULD BE GOOD TO AUTO-MOUNT THE CAPTURE LOCAITON.
@@ -94,15 +98,24 @@ for run in $(seq 1 $runs); do
 		done
 	fi
 	echo "Old results cleared... Starting  new run"
+
 	for benchmark in "${benchmarks[@]}"; do
-		./run.sh start $benchmark
+		timeout $timeout_limit ./run.sh start $benchmark
+		if [[ $? != 0 ]]; then
+			echo "Setup timed out."
+			exit 124
+		fi
 	done
 	# Make sure the servers have really started
 	sleep 1
 	for benchmark in "${benchmarks[@]}"; do
 		./run.sh run $benchmark &
 	done
-	wait
+	timeout $timeout_limit wait
+	if [[ $? != 0 ]]; then
+		echo  "Benchmark run timed out"
+		exit 124
+	fi
 	sleep 1
 
 	echo "Run done!"
@@ -110,7 +123,11 @@ for run in $(seq 1 $runs); do
 	for benchmark in "${benchmarks[@]}"; do
 		./run.sh stop $benchmark || echo "Nothing to kill" &
 	done
-	wait
+	timeout $timeout_limit wait
+	if [[[ $? != 0 ]]; then
+		echo "Benchmark stop timed out"
+		exit 124
+	fi
 
 	sleep 3
 
