@@ -93,13 +93,13 @@ for run in $(seq 1 $runs); do
 		for machine in ${capture_machines[@]}; do
 			# Kill any ongoing recording going on:
 			remote_run_script $machine hpt/stop_recording.sh
+			# TODO -- IT WOULD BE GOOD TO AUTO-MOUNT THE CAPTURE LOCAITON.
+			capture_location=$(get_config_value "${machine}_capture_location" /root/jcw78/scripts/apps/capture_config)
 			# Clear the capture location. (But don't delete the location itself).
 			remote_run_command $machine "rm -rf $capture_location/*"
 			# Get the interfaces/CPUs we are using on those machines.
 			use_both=$(get_config_value "${machine}_both_ports" /root/jcw78/scripts/apps/capture_config)
-			# TODO -- IT WOULD BE GOOD TO AUTO-MOUNT THE CAPTURE LOCAITON.
 			cpus=$(get_config_value "${machine}_cpus" /root/jcw78/scripts/apps/capture_config)
-			capture_location=$(get_config_value "${machine}_capture_location" /root/jcw78/scripts/apps/capture_config)
 			if [[ $use_both == *Yes* ]]; then
 				interface1=$(get_config_value "${machine}_if1" /root/jcw78/scripts/apps/capture_config)
 				interface2=$(get_config_value "${machine}_if2" /root/jcw78/scripts/apps/capture_config)
@@ -112,23 +112,21 @@ for run in $(seq 1 $runs); do
 	fi
 	echo "Old results cleared... Starting  new run"
 
+	# Remove any failed markers from before.
+	rm -f .failed
 	for benchmark in "${benchmarks[@]}"; do
-		timeout $timeout_limit ./run.sh start $benchmark
-		if [[ $? != 0 ]]; then
-			echo "Setup timed out."
-			exit 124
-		fi
+		timeout -s=KILL $timeout_limit ./run.sh start $benchmark || touch .failed
 	done
 	# Make sure the servers have really started
 	sleep 1
-	for benchmark in "${benchmarks[@]}"; do
-		./run.sh run $benchmark &
-	done
-	timeout $timeout_limit wait
-	if [[ $? != 0 ]]; then
-		echo  "Benchmark run timed out"
-		exit 124
+	if [[ ! -f .failed ]]; then
+		# If the setup failed, we shouldn't run the main apps.
+		for benchmark in "${benchmarks[@]}"; do
+			(timeout -s=KILL $timeout_limit ./run.sh run $benchmark ||
+			touch .failed) &
+		done
 	fi
+	wait
 	sleep 1
 
 	echo "Run done!"
@@ -136,11 +134,6 @@ for run in $(seq 1 $runs); do
 	for benchmark in "${benchmarks[@]}"; do
 		./run.sh stop $benchmark || echo "Nothing to kill" &
 	done
-	timeout $timeout_limit wait
-	if [[[ $? != 0 ]]; then
-		echo "Benchmark stop timed out"
-		exit 124
-	fi
 
 	sleep 3
 
@@ -182,6 +175,15 @@ for run in $(seq 1 $runs); do
 		scp $machine:~/hostinfo $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
 		scp -r $machine:~/logs $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
 	done
+
+	if [[ -f .failed ]]; then
+		# This benchmark failed because something timed out.  Make that failure clear in the storage directory and exit with an error.
+		# If the benchmark failed because of a timeout, something is wrong and we probably shouldn't repeat it anyway.
+		echo "Benchmark timed out when running!"
+		echo "Benchmark time out: either increase the TimeoutLimit in the apps/config file or look to see if the benchmark deadlocked somehow. " > $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/FAILED_WITH_TIMEOUT
+		exit 124
+	fi
+
 
 	echo "Done with run!"
 done
