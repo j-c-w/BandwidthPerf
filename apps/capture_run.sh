@@ -115,14 +115,14 @@ for run in $(seq 1 $runs); do
 	# Remove any failed markers from before.
 	rm -f .failed
 	for benchmark in "${benchmarks[@]}"; do
-		timeout -s=KILL $timeout_limit ./run.sh start $benchmark || touch .failed
+		timeout -s KILL $timeout_limit ./run.sh start $benchmark || touch .failed
 	done
 	# Make sure the servers have really started
 	sleep 1
 	if [[ ! -f .failed ]]; then
 		# If the setup failed, we shouldn't run the main apps.
 		for benchmark in "${benchmarks[@]}"; do
-			(timeout -s=KILL $timeout_limit ./run.sh run $benchmark ||
+			(timeout -s KILL $timeout_limit ./run.sh run $benchmark ||
 			touch .failed) &
 		done
 	fi
@@ -187,5 +187,9 @@ for run in $(seq 1 $runs); do
 
 	echo "Done with run!"
 done
-echo "Done with capture!"
+if [[ ${#no_capture} == 0 ]]; then
+	echo "Done with capture!"
+else
+	echo "No capture run"
+fi
 popd
