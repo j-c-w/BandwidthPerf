@@ -5,10 +5,12 @@ nf-server07.nf.cl.cam.ac.uk: ens10f0
 nf-server01.nf.cl.cam.ac.uk: ens2f1
 nf-server02.nf.cl.cam.ac.uk: ens4f0
 nf-server05.nf.cl.cam.ac.uk: ens10f1
-runs: 10
+runs: 1
 ResultsDirectory: /data
 LTSLocation: /root/jcw78/lts
-NRGMachine: nf-server06.nf.cl.cam.ac.uk
+NRGMachine: None
 # The maximum amount fo time we let a benchmark run for. (In seconds).  After that, the benchmark is killed and an error is noted.
-# We apply the same limit to the setup and the stop phases.
+# We apply the same limit to the setup phase.
 TimeoutLimit: 1200
+# Time in seconds for the benchmarking machines to reboot.
+RebootTime: 120
