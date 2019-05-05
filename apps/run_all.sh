@@ -69,7 +69,7 @@ for line in ${lines[@]}; do
 	fi
 
 	flags=""
-	if [[ ${#no_capture} == 0 ]]; then
+	if [[ ${#no_capture} != 0 ]]; then
 		flags="--no-capture"
 	fi
 
@@ -79,13 +79,19 @@ for line in ${lines[@]}; do
 	# This '||' business is a bit of a hack to avoid
 	# issues with set -e.
 	ret_code=0
-	./capture_run.sh $benchmarks $number_of_machines $name $flags || ret_code=$?
+	(./capture_run.sh $benchmarks $number_of_machines $name $flags | tee capture_run_output) || ret_code=$?
 	if [[ $ret_code == 124 ]]; then
 		echo "Benchmark timed out.  Logging information to BENCHMARK_TIMEOUTS"
 		echo "The run specified by line '$line' has timed out.  This happened at $(date)" >> BENCHMARK_TIMEOUTS
+	elif [[ $ret_code == 123 ]]; then
+		echo "One or more of the machines was unreachable. "
+		echo "The run specified by line '$line' is using a machine that is not reachable.  See the run logs for more information." >> MACHINE_FAILURES
 	elif [[ $ret_code != 0 ]]; then
-		# Misc error.  We should exit.
-		exit 1
+		# Misc error.  We don't exit any more, but we do keep the output as a record.
+		echo "=========== FAILED RUNNING ========== (error code $ret_code)"
+		echo "Config line was $line"
+		echo "Capture run output was:"
+		cat capture_run_output >> FAILED_RUNS_LOG
 	fi
 
 	echo "Run finished, moving on to next run"
