@@ -86,6 +86,11 @@ for line in ${lines[@]}; do
 	elif [[ $ret_code == 123 ]]; then
 		echo "One or more of the machines was unreachable. "
 		echo "The run specified by line '$line' is using a machine that is not reachable.  See the run logs for more information." >> MACHINE_FAILURES
+	elif [[ $ret_code == 122 ]]; then
+		echo "Error: one of the machines you were capturing from has died"
+		echo "This is a fatal error.  Exiting"
+		echo "The run specified by '$line' is using a machine that is not reachable.  We did not carry on because the machine that failed is being captured from.  This should be fixed." >> MACHINE_FAILURES
+		exit 122
 	elif [[ $ret_code != 0 ]]; then
 		# Misc error.  We don't exit any more, but we do keep the output as a record.
 		echo "=========== FAILED RUNNING ========== (error code $ret_code)"

@@ -6,3 +6,5 @@ nf-server14.nf.cl.cam.ac.uk_lts_location: /root/jcw78/lts
 # This is just a temp location in case the ram disk is not big enough to do  the compression in-place.
 nf-server14.nf.cl.cam.ac.uk_compress_location: /root/jcw78
 nf-server14.nf.cl.cam.ac.uk_cpus: 1:2,3:4,5,6,7,8,9,10,11,12
+# Record which machine this capture card is instrumenting.
+nf-server14.nf.cl.cam.ac.uk_instrumenting: nf-server07.nf.cl.cam.ac.uk

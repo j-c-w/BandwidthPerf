@@ -76,6 +76,7 @@ for run in $(seq 1 $runs); do
 	#### This part handles machines that might have gone down
 	# Get $num_machines machines that are up.
 	typeset -a working_machines
+	typeset -a broken_machines
 	for mach in ${machines[@]}; do
 		ping_attempts=0
 		reached="True"
@@ -91,6 +92,8 @@ for run in $(seq 1 $runs); do
 
 		if [[ $reached == "True" ]]; then
 			working_machines+=$mach
+		else
+			broken_machines+=$mach
 		fi
 	done
 
@@ -141,6 +144,17 @@ for run in $(seq 1 $runs); do
 		for machine in ${capture_machines[@]}; do
 			# Kill any ongoing recording going on:
 			remote_run_script $machine hpt/stop_recording.sh
+			# Check that the machine we are instrumenting is not one that failed.
+			instrumented_machine=$(get_config_value "${machine}_instrumenting")
+			for broken_machine in ${broken_machines[@]}; do
+				if [[ *${broken_machine}* == $instrumented_machine ]]; then
+					echo "A broken machine is one of the machines being instrumented"
+					echo "Machine is $instrumented_machine and is being instrumented by the capture card on $machine"
+					echo "This is a fatal error"
+					exit 122
+				fi
+			done
+
 			# TODO -- IT WOULD BE GOOD TO AUTO-MOUNT THE CAPTURE LOCAITON.
 			capture_location=$(get_config_value "${machine}_capture_location" /root/jcw78/scripts/apps/capture_config)
 			# Clear the capture location. (But don't delete the location itself).
