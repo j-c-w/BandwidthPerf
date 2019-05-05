@@ -9,37 +9,37 @@
 # To run tensorflow on 7 machines with added latency of 5ns:
 # tensorflow_5ns_latency 7 5 None tensorflow
 
-# memcached 2 None None memcached
-# tensorflow 2 None None tensorflow
-# apache 2 None None apache
-# dns 2 None None dns
-# hadoop 2 None None hadoop
+memcached 2 None None memcached
+tensorflow 2 None None tensorflow
+apache 2 None None apache
+dns 2 None None dns
+hadoop 2 None None hadoop
 
-# memcached 3 None None memcached
-# tensorflow 3 None None tensorflow
-# apache 3 None None apache
-# dns 3 None None dns
-# hadoop 3 None None hadoop
+memcached 3 None None memcached
+tensorflow 3 None None tensorflow
+apache 3 None None apache
+dns 3 None None dns
+hadoop 3 None None hadoop
 
-# memcached 4 None None memcached
-# tensorflow 4 None None tensorflow
-# apache 4 None None apache
-# dns 4 None None dns
-# hadoop 4 None None hadoop
+memcached 4 None None memcached
+tensorflow 4 None None tensorflow
+apache 4 None None apache
+dns 4 None None dns
+hadoop 4 None None hadoop
 
-# memcached 5 None None memcached
-# tensorflow 5 None None tensorflow
-# apache 5 None None apache
-# dns 5 None None dns
-# hadoop 5 None None hadoop
+memcached 5 None None memcached
+tensorflow 5 None None tensorflow
+apache 5 None None apache
+dns 5 None None dns
+hadoop 5 None None hadoop
 
-# memcached 6 None None memcached
-# tensorflow 6 None None tensorflow
-# apache 6 None None apache
-# dns 6 None None dns
-# hadoop 6 None None hadoop
+memcached 6 None None memcached
+tensorflow 6 None None tensorflow
+apache 6 None None apache
+dns 6 None None dns
+hadoop 6 None None hadoop
 
-# memcached 7 None None memcached
+memcached 7 None None memcached
 tensorflow 7 None None tensorflow
 apache 7 None None apache
 dns 7 None None dns
