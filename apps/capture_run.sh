@@ -26,6 +26,8 @@ results_directory=$(get_config_value ResultsDirectory)
 timeout_limit=$(get_config_value TimeoutLimit)
 reboot_time=$(get_config_value RebootTime)
 
+installed=False
+
 typeset -a benchmarks
 
 while [[ $# -gt 2 ]]; do
@@ -59,24 +61,70 @@ if [[ ${#dry_run} != 0 ]]; then
 	exit 0
 fi
 
-# Only install on the number of machines we are using.  Recall this
-# is a ZSH script so arrays start at 0.
-/root/jcw78/scripts/apps/install_apps.sh ${machines[@]:0:$num_machines}
 pushd /root/jcw78/SUMMER2017/apps/benchmark/
-for benchmark in "${benchmarks[@]}"; do
-	./run.sh install $benchmark
-done
-
 for run in $(seq 1 $runs); do
+	#### This part handles rebooting machines for caches etc.
 	# Reboot the machines we are using and give them time
 	# to turn on.  (Unless this was disabled)
 	if [[ ${#no_reboot} == 0 ]]; then
 		echo "Starting machine reboot..."
-		/root/jcw78/scripts/apps/reboot_machines.sh ${machines[@]:0:$num_machines}
+		/root/jcw78/scripts/apps/reboot_machines.sh ${machines[@]}
 		sleep $reboot_time
 		echo "Reboot done!"
 	fi
 
+	#### This part handles machines that might have gone down
+	# Get $num_machines machines that are up.
+	typeset -a working_machines
+	for mach in ${machines[@]}; do
+		ping_attempts=0
+		reached="True"
+		while ! ping $mach -c 1; do
+			ping_attempts=$((ping_attempts + 1))
+			if (($ping_attempts > 5)); then
+				reached=False
+				echo "Failed to reach machine $mach!"
+				echo "Seeing if there is another machine available"
+				break
+			fi
+		done
+
+		if [[ $reached == "True" ]]; then
+			working_machines+=$mach
+		fi
+	done
+
+	if [[ ${#working_machines} < $num_machines ]]; then
+		# If there are not enough working machines, skip this run.
+		echo "Also aborting benchmark run."
+		echo "Aborted run at $(date): only machines ${working_machines[@]} were working" >> /root/jcw78/scripts/apps/BENCHMARK_MACHINE_FAILURES
+
+		exit 123
+	fi
+
+	if [[ "${working_machines[@]}" != "${machines[@]}" ]]; then
+		# If the working machines are not the same as the machines
+		# we originally installed and setup for, then we need to
+		# do that again.
+		installed=False
+	fi
+
+	# Set machines equal to the number of working machines.
+	machines=("${working_machines[@]}")
+
+	# Install if we haven't installed yet:
+	if [[ $installed == *False* ]]; then
+		pushd /root/jcw78/scripts/apps
+		./generate_config.sh $num_machines ${machines[@]:0:$num_machines}
+		./install_apps.sh ${machines[@]}
+		popd
+		for benchmark in "${benchmarks[@]}"; do
+			./run.sh install $benchmark
+		done
+		installed=True
+	fi
+
+	#### This part deals with running the benchmark.
 	# Make sure that the benchmark doesn't already happen 
 	# to be running
 	for benchmark in "${benchmarks[@]}"; do
@@ -144,6 +192,7 @@ for run in $(seq 1 $runs); do
 		done
 	fi
 
+	##### This part deals with the cleanup.
 	# Get the files from each machine.  If they don't exist,
 	# that's alright, the machines just might not have been
 	# involved.
