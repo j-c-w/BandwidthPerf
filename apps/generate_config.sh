@@ -3,8 +3,9 @@
 # This is a script that generates a config for N machines
 # taken from the machines file.
 
-if [[ $# -ne 1 ]]; then
-	echo "Usage $0 <number of machines in config>"
+if [[ $# -lt 1 ]]; then
+	echo "Usage $0 <number of machines in config> <(optional) machines ...>"
+	echo "If no machines are passed, the 'machines' file is used."
 	exit 1
 fi
 
@@ -12,7 +13,17 @@ mach_no=0
 role=master
 config_file=/root/jcw78/SUMMER2017/apps/benchmark/config
 total=$1
-machines=($(cat < machines))
+if [[ $# == 1 ]]; then
+	machines=($(cat < machines))
+else
+	typeset -a machines
+
+	shift
+	while [[ $# -gt 0 ]]; do
+		machines+=($1)
+		shift
+	done
+fi
 
 if (( total > ${#machines} )); then
 	echo "You can't use more machines than defined.  Put more machines into the 'machines' file"
