@@ -139,13 +139,15 @@ for run in $(seq 1 $runs); do
 	for machine in ${machines[@]}; do
 		remote_run_command $machine "rm -rf $results_directory"
 	done
+	set -x
 	if [[ ${#no_capture} == 0 ]]; then
 		# Start all the capture cards:
 		for machine in ${capture_machines[@]}; do
+			echo "Setting up capture on $machine"
 			# Kill any ongoing recording going on:
 			remote_run_script $machine hpt/stop_recording.sh
 			# Check that the machine we are instrumenting is not one that failed.
-			instrumented_machine=$(get_config_value "${machine}_instrumenting")
+			instrumented_machine=$(get_config_value "${machine}_instrumenting" /root/jcw78/scripts/apps/capture_config)
 			for broken_machine in ${broken_machines[@]}; do
 				if [[ *${broken_machine}* == $instrumented_machine ]]; then
 					echo "A broken machine is one of the machines being instrumented"
@@ -226,8 +228,11 @@ for run in $(seq 1 $runs); do
 	if [[ ${#no_capture} == 0 ]]; then
 		# Compress the capture files from each machine, then put them into the LTS:
 		for machine in ${capture_machines[@]}; do
+			# Catalogue the machine that each machine captured on.
+			instrumented_machine=$(get_config_value "${machine}_instrumenting" /root/jcw78/scripts/apps/capture_config)
+
 			remote_run_command $machine "mkdir -p $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run"
-			remote_run_command $machine "bzip2 $capture_location/$label/${num_machines}_machines/${machine}-0.expcap; mv $capture_location/$label/${num_machines}_machines/${machine}-0.expcap.bz2 $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${machine}.expcap.bz2; mv $capture_location/$label/${num_machines}_machines/${machine}_cmd_out $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${machine}_cmd_out" &
+			remote_run_command $machine "bzip2 $capture_location/$label/${num_machines}_machines/${machine}-0.expcap; mv $capture_location/$label/${num_machines}_machines/${machine}-0.expcap.bz2 $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${instrumented_machine}_captured_by_${machine}.expcap.bz2; mv $capture_location/$label/${num_machines}_machines/${machine}_cmd_out $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${instrumented_machine}_captured_by_${machine}_cmd_out" &
 		done
 		wait
 	fi

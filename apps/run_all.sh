@@ -7,7 +7,16 @@ echo "to modify it"
 set -eu
 typeset -a dry_run
 typeset -a no_capture
-zparseopts -D -E -dry-run=dry_run -no-capture=no_capture
+typeset -a no_reboot
+zparseopts -D -E -dry-run=dry_run -no-capture=no_capture -no-reboot=no_reboot
+
+if [[ $# -ne 0 ]]; then
+	echo "Usage: $0 [flags]"
+	echo "--dry-run to just print values"
+	echo "--no-capture to not capture"
+	echo "--no-reboot to not reboot machines between runs"
+	exit 1
+fi
 
 source /root/jcw78/scripts/general/parse_config.sh
 source /root/jcw78/scripts/general/remote_run.sh
@@ -68,9 +77,14 @@ for line in ${lines[@]}; do
 		remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
 	fi
 
-	flags=""
+	no_capture_flags=""
 	if [[ ${#no_capture} != 0 ]]; then
-		flags="--no-capture"
+		no_capture_flags="--no-capture"
+	fi
+
+	no_reboot_flags=""
+	if [[ ${#no_reboot} != 0 ]]; then
+		no_reboot_flags="--no-reboot"
 	fi
 
 	# If the benchmark times out, it will exit with code
@@ -79,7 +93,7 @@ for line in ${lines[@]}; do
 	# This '||' business is a bit of a hack to avoid
 	# issues with set -e.
 	ret_code=0
-	(./capture_run.sh $benchmarks $number_of_machines $name $flags | tee capture_run_output) || ret_code=$?
+	(./capture_run.sh $benchmarks $number_of_machines $name $no_capture_flags $no_reboot_flags | tee capture_run_output) || ret_code=$?
 	if [[ $ret_code == 124 ]]; then
 		echo "Benchmark timed out.  Logging information to BENCHMARK_TIMEOUTS"
 		echo "The run specified by line '$line' has timed out.  This happened at $(date)" >> BENCHMARK_TIMEOUTS
