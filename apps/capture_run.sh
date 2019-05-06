@@ -214,15 +214,17 @@ for run in $(seq 1 $runs); do
 	# involved.
 	# First clear any old results from the folder we are about
 	# to populate.
-	if [[ -d $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run ]]; then
-		rm -rf $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run
+	results_directory=$lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/
+	if [[ -d $results_directory ]]; then
+		rm -rf $results_directory
 	fi
-	mkdir -p $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run
+
+	mkdir -p $results_directory
 	for machine in ${machines[@]:0:$num_machines}; do
 		# We need to make sure that the directory is created
 		# regardless of whether we copy anything back.
-		mkdir -p $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
-		scp -r $machine:$results_directory $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine || echo "It seems that machine $machine did not produce any data."
+		mkdir -p $results_directory/$machine
+		scp -r $machine:$results_directory $results_directory/$machine || echo "It seems that machine $machine did not produce any data."
 	done
 
 	if [[ ${#no_capture} == 0 ]]; then
@@ -231,8 +233,8 @@ for run in $(seq 1 $runs); do
 			# Catalogue the machine that each machine captured on.
 			instrumented_machine=$(get_config_value "${machine}_instrumenting" /root/jcw78/scripts/apps/capture_config)
 
-			remote_run_command $machine "mkdir -p $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run"
-			remote_run_command $machine "bzip2 $capture_location/$label/${num_machines}_machines/${machine}-0.expcap; mv $capture_location/$label/${num_machines}_machines/${machine}-0.expcap.bz2 $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${instrumented_machine}_captured_by_${machine}.expcap.bz2; mv $capture_location/$label/${num_machines}_machines/${machine}_cmd_out $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/${instrumented_machine}_captured_by_${machine}_cmd_out" &
+			remote_run_command $machine "mkdir -p $results_directory"
+			remote_run_command $machine "bzip2 $capture_location/$label/${num_machines}_machines/${machine}-0.expcap; mv $capture_location/$label/${num_machines}_machines/${machine}-0.expcap.bz2 $results_directory/${instrumented_machine}_captured_by_${machine}.expcap.bz2; mv $capture_location/$label/${num_machines}_machines/${machine}_cmd_out $results_directory/${instrumented_machine}_captured_by_${machine}_cmd_out" &
 		done
 		wait
 	fi
@@ -240,15 +242,32 @@ for run in $(seq 1 $runs); do
 	# Also get the log information and the host information.
 	for machine in ${machines[@]:0:$num_machines}; do
 		echo "Getting log files from $machine"
-		scp $machine:~/hostinfo $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
-		scp -r $machine:~/logs $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/$machine
+		scp $machine:~/hostinfo $results_directory/$machine
+		scp -r $machine:~/logs $results_directory/$machine
+	done
+
+	# Finally, we want to keep the relevant parts of the config file.  Namely, we want to keep the part that links each  machine to each role.
+	roles_file=$results_directory/MachineRoles
+
+	# The  config file works in IP addresses.  Leave the mapping
+	# of machine to IP address that we used in there.
+	for machine in ${machines[@]:0:$num_machines}; do
+		management_interface=$(nslookup ${machines[$mach_no]} | tail -n 3 | awk -F':' '/Address: / {print $2 }' | tr -d ' ')
+		echo "IP Address for $machine is $management_interface" >> $roles_file
+	done
+
+	# Get the relevant parts of the config file and leave it
+	# as evidence
+	for benchmark in ${benchmarks[@]}; do
+		echo "Configuration for benchmark $benchmark is:" >> $roles_file
+		grep -e $benchmark config >> $roles_file
 	done
 
 	if [[ -f .failed ]]; then
 		# This benchmark failed because something timed out.  Make that failure clear in the storage directory and exit with an error.
 		# If the benchmark failed because of a timeout, something is wrong and we probably shouldn't repeat it anyway.
 		echo "Benchmark timed out when running!"
-		echo "Benchmark time out: either increase the TimeoutLimit in the apps/config file or look to see if the benchmark deadlocked somehow. " > $lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/FAILED_WITH_TIMEOUT
+		echo "Benchmark time out: either increase the TimeoutLimit in the apps/config file or look to see if the benchmark deadlocked somehow. " > $results_directory/FAILED_WITH_TIMEOUT
 		exit 124
 	fi
 
