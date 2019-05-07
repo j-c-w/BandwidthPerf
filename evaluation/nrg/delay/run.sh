@@ -25,15 +25,15 @@ NRGMachine=$(get_config_value "MachineB")
 HPTMachine=$(get_config_value "MachineC")
 
 lts_location=$(get_config_value "LTSLocation" ../config)
-hpt_port=$(get_config_value "HPTPort" ../config)
-hpt_port1=$(get_config_value "HPTPort1" ../config)
-cpus=$(get_config_value "HPTCPUs" ../config)
-cpus1=$(get_config_value "HPTCPUs1" ../config)
+hpt_port=$(get_config_value "HPTPort" config)
+hpt_port1=$(get_config_value "HPTPort1" config)
+cpus=$(get_config_value "HPTCPUs" config)
+cpus1=$(get_config_value "HPTCPUs1" config)
 rate=$(get_config_value "Rate")
 num_to_send=$(get_config_value "NumPackets")
-wire_capacity=10000
 size=64
 
+set -x
 # Stop any recording that might be going on:
 remote_run_script $HPTMachine hpt/stop_recording.sh
 for run in $(seq 1 $runs); do
@@ -42,21 +42,9 @@ for run in $(seq 1 $runs); do
 		if [[ ${#dry_run} -gt 0 ]]; then
 			continue
 		fi
-		packet_time=$(( 1000.0 * $size * 8.0 / $wire_capacity ))
-		ipg=$((int(rint($(echo "scale=30; 10000.0 * ($packet_time / $rate) - $packet_time" | bc)))))
-		echo "==========================================="
-		echo "Running tests for rate $rate"
-		echo "This means using inter-arrival gap ${ipg}ns"
-		expected_time=$(( (num_to_send * ($size * 8)) / ($rate * 1000000) ))
-		expected_space=$(( num_to_send * size ))
-		total_space=$(( total_space + expected_space / 1000000000.0 ))
-		echo "Expected runtime is $expected_time"
-		echo "Expected space is ${expected_space}B"
-		echo "Total space used by this test is $total_space GB"
 
-		if [[ ${#dry_run} -gt 0 ]]; then
-			continue
-		fi
+		ipg=$((delay * 2)) # Get the packet all the way
+		# through the NRG before we send another one.
 
 		# Setup the NRG.
 		remote_run_script $NRGMachine nrg/set_delay.sh $delay
@@ -71,7 +59,7 @@ for run in $(seq 1 $runs); do
 
 		# Run OSNT.
 		remote_run_script $OSNTMachine osnt/run_osnt.sh -ifp0 /root/jcw78/scripts/pcap_files/$size.cap -rpn0 $num_to_send -ipg0 $ipg -run
-		sleep $(( int(expected_time) + 3 ))
+		sleep $((3 + $num_to_send * $ipg / 1000000000 ))
 
 		# Stop the HPT recording.
 		remote_run_script $HPTMachine hpt/stop_recording.sh
