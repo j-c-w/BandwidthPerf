@@ -1,3 +1,4 @@
+from decimal import Decimal
 import matplotlib.pyplot as plt
 import argparse
 import sys
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 
     differences = []
     for i in range(0, len(delayed_times)):
-        differences.append(str(delayed_times[i] - undelayed_times[i]))
+        differences.append(str((delayed_times[i] - undelayed_times[i]) * Decimal(1000000000.0)))
 
     with open(args.output_file, 'w') as outfile:
         outfile.write(','.join(differences))
