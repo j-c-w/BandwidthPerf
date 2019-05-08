@@ -63,6 +63,7 @@ fi
 
 pushd /root/jcw78/SUMMER2017/apps/benchmark/
 for run in $(seq 1 $runs); do
+	echo "Starting new run at $(date)"
 	#### This part handles rebooting machines for caches etc.
 	# Reboot the machines we are using and give them time
 	# to turn on.  (Unless this was disabled)
@@ -100,7 +101,7 @@ for run in $(seq 1 $runs); do
 	if [[ ${#working_machines} < $num_machines ]]; then
 		# If there are not enough working machines, skip this run.
 		echo "Also aborting benchmark run."
-		echo "Aborted run at $(date): only machines ${working_machines[@]} were working" >> /root/jcw78/scripts/apps/BENCHMARK_MACHINE_FAILURES
+		echo "Aborted run at $(date): machines ${broken_machines[@]} were broken.  If that list is empty, perhaps you asked for more machines than specified in the 'machines' file?" >> /root/jcw78/scripts/apps/BENCHMARK_MACHINE_FAILURES
 
 		exit 123
 	fi
@@ -167,10 +168,10 @@ for run in $(seq 1 $runs); do
 			if [[ $use_both == *Yes* ]]; then
 				interface1=$(get_config_value "${machine}_if1" /root/jcw78/scripts/apps/capture_config)
 				interface2=$(get_config_value "${machine}_if2" /root/jcw78/scripts/apps/capture_config)
-				remote_run_script $machine hpt/record_port.sh $interface1 $interface2 $capture_location/$benchmark/${num_machines}_machines/$machine $cpus $capture_location/$benchmark/${num_machines}_machines/${machine}_cmd_out
+				remote_run_script $machine hpt/record_port.sh $interface1 $interface2 $capture_location/$label/${num_machines}_machines/$machine $cpus $capture_location/$label/${num_machines}_machines/${machine}_cmd_out
 			else
 				interface1=$(get_config_value "${machine}_if1" /root/jcw78/scripts/apps/capture_config)
-				remote_run_script $machine hpt/record_port.sh $interface1 $capture_location/$benchmark/${num_machines}_machines/$machine $cpus $capture_location/$benchmark/${num_machines}_machines/${machine}_cmd_out
+				remote_run_script $machine hpt/record_port.sh $interface1 $capture_location/$label/${num_machines}_machines/$machine $cpus $capture_location/$label/${num_machines}_machines/${machine}_cmd_out
 			fi
 		done
 	fi
@@ -248,11 +249,12 @@ for run in $(seq 1 $runs); do
 
 	# Finally, we want to keep the relevant parts of the config file.  Namely, we want to keep the part that links each  machine to each role.
 	roles_file=$results_directory/MachineRoles
+	touch $roles_file
 
 	# The  config file works in IP addresses.  Leave the mapping
 	# of machine to IP address that we used in there.
 	for machine in ${machines[@]:0:$num_machines}; do
-		management_interface=$(nslookup ${machines[$mach_no]} | tail -n 3 | awk -F':' '/Address: / {print $2 }' | tr -d ' ')
+		management_interface=$(nslookup $machine | tail -n 3 | awk -F':' '/Address: / {print $2 }' | tr -d ' ')
 		echo "IP Address for $machine is $management_interface" >> $roles_file
 	done
 
