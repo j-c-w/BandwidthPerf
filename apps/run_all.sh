@@ -43,7 +43,8 @@ for line in ${lines[@]}; do
 	nrg_bandwidth=$(cut -f4 -d ' ' <<< $line)
 
 	# All remaining items are benchmarks.
-	benchmarks=$(cut --complement -f1-4 -d' ' <<< $line)
+	benchmarks=($(cut --complement -f1-4 -d' ' <<< $line))
+	echo "Running ${#benchmarks} benchmarks"
 
 	if [[ $nrg_delay != *None* ]] && [[ $nrg_bandwidth != *None* ]]; then
 		echo "Warning: setup with both delay and bandwidth is untested.  Remove this warning (and subsequent exit) if you are sure."
@@ -93,7 +94,9 @@ for line in ${lines[@]}; do
 	# This '||' business is a bit of a hack to avoid
 	# issues with set -e.
 	ret_code=0
-	(./capture_run.sh $benchmarks $number_of_machines $name $no_capture_flags $no_reboot_flags | tee capture_run_output) || ret_code=$?
+	(./capture_run.sh $benchmarks $number_of_machines $name $no_capture_flags $no_reboot_flags | tee capture_run_output; echo ${pipestatus[1]} > .ret_code)
+	ret_code=$(cat < .ret_code)
+	echo "Benchmark done, return code '$ret_code'"
 	if [[ $ret_code == 124 ]]; then
 		echo "Benchmark timed out.  Logging information to BENCHMARK_TIMEOUTS"
 		echo "The run specified by line '$line' has timed out.  This happened at $(date)" >> BENCHMARK_TIMEOUTS
@@ -112,6 +115,8 @@ for line in ${lines[@]}; do
 		echo "Capture run output was:"
 		cat capture_run_output >> FAILED_RUNS_LOG
 	fi
+
+	cat capture_run_output >> ALL_RUNS_OUTPUT_LOG
 
 	echo "Run finished, moving on to next run"
 done
