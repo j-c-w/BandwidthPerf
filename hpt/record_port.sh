@@ -22,11 +22,6 @@ cpus_check() {
 	fi
 }
 
-# Make sure that the port is enabled first.
-pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
-./exanic-config $1 up
-popd
-
 # The ExaNIC appears to react fine to having multiple               
 # instances running.  There is a kill script, but
 # we don't do that here.  This lets us start multiple
@@ -36,6 +31,11 @@ if [[ $# -eq 4 ]]; then
 	out_file=$2
 	cpus=$3
 	cmd_out_file=$4
+
+	# Make sure that the port is enabled first.
+	pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
+	./exanic-config $port up
+	popd
 
 	cpus_check $cpus
 
@@ -53,6 +53,12 @@ if [[ $# -eq 5 ]]; then
 	out_file=$3
 	cpus=$4
 	cmd_out_file=$5
+
+	# Make sure that the port is enabled first.
+	pushd /root/jcw78/scripts/hpt_setup/exanic-software/util
+	./exanic-config $port_1 up
+	./exanic-config $port_2 up
+	popd
 
 	cpus_check $cpus
 
