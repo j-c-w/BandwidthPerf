@@ -109,3 +109,32 @@ if __name__ == "__main__":
     ax.set_xscale('log')
     plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max), fmt='o')
     plt.savefig('nrg_requested_delay_vs_measured_delay.eps')
+
+    # Plot the same thing, but with the offset of the latency introduced at 0.
+    if delays[0] == 0:
+        y_data = []
+        y_errors_min = []
+        y_errors_max = []
+
+        zero_min_delay = min(measured_delays[0])
+
+        for measurements in measured_delays:
+            graph_value = np.median(measurements)
+            y_data.append(graph_value - zero_min_delay)
+            print min(measurements)
+            print max(measurements)
+            y_errors_min.append(graph_value - min(measurements) - zero_min_delay)
+            y_errors_max.append(max(measurements) - (graph_value - zero_min_delay))
+        print len(delays)
+        print len(y_data)
+
+        plt.clf()
+        plt.title("Difference between Requested Delay and Added Delay (NRG)")
+        plt.xlabel("Requested Delay (log ns)")
+        plt.ylabel("Difference between requested and measured delay (log ns)")
+
+        ax = plt.gca()
+        ax.set_yscale('log')
+        ax.set_xscale('log')
+        plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max), fmt='o')
+        plt.savefig('nrg_requested_delay_vs_added_delay.eps')
