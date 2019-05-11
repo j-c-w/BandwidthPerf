@@ -22,7 +22,7 @@ zparseopts -D -E -dry-run=dry_run -no-capture=no_capture -no-reboot=no_reboot
 
 runs=$(get_config_value runs)
 lts_directory=$(get_config_value LTSLocation)
-results_directory=$(get_config_value ResultsDirectory)
+app_results_directory=$(get_config_value ResultsDirectory)
 timeout_limit=$(get_config_value TimeoutLimit)
 reboot_time=$(get_config_value RebootTime)
 
@@ -47,23 +47,24 @@ typeset -a machines
 machines=($(cat < machines))
 echo "Running apps on ${#machines} total machines"
 echo "Requested use of $num_machines of them"
+
 typeset -a capture_machines
 capture_machines=($(cat < capture_machines))
 echo "Running capture cards on ${#capture_machines} machines"
-config_dir=$PWD
-
+echo "Doing $runs runs on $num_machines different machines"
 
 if [[ ${#dry_run} != 0 ]]; then
-	echo "Doing $runs runs on $num_machines different machines"
 	echo "Machines are ${machines[@]:0:$num_machines}"
 	echo "Benchmarks are $benchmarks"
 	echo "Run name is $label"
 	exit 0
 fi
 
+set -x
 pushd /root/jcw78/SUMMER2017/apps/benchmark/
 for run in $(seq 1 $runs); do
 	echo "Starting new run at $(date)"
+	echo "This is run $run (the list of runs we are doing is $(seq 1 $runs)"
 	#### This part handles rebooting machines for caches etc.
 	# Reboot the machines we are using and give them time
 	# to turn on.  (Unless this was disabled)
@@ -78,6 +79,8 @@ for run in $(seq 1 $runs); do
 	# Get $num_machines machines that are up.
 	typeset -a working_machines
 	typeset -a broken_machines
+	working_machines=()
+	broken_machines=()
 	for mach in ${machines[@]}; do
 		ping_attempts=0
 		reached="True"
@@ -98,7 +101,7 @@ for run in $(seq 1 $runs); do
 		fi
 	done
 
-	if [[ ${#working_machines} < $num_machines ]]; then
+	if [[ ${#working_machines} -lt $num_machines ]]; then
 		# If there are not enough working machines, skip this run.
 		echo "Also aborting benchmark run."
 		echo "Aborted run at $(date): machines ${broken_machines[@]} were broken.  If that list is empty, perhaps you asked for more machines than specified in the 'machines' file?" >> /root/jcw78/scripts/apps/BENCHMARK_MACHINE_FAILURES
@@ -138,7 +141,7 @@ for run in $(seq 1 $runs); do
 	# Clear any old results from the results directories:
 	echo "Clearing old results..."
 	for machine in ${machines[@]}; do
-		remote_run_command $machine "rm -rf $results_directory"
+		remote_run_command $machine "rm -rf $app_results_directory"
 	done
 	set -x
 	if [[ ${#no_capture} == 0 ]]; then
@@ -216,6 +219,7 @@ for run in $(seq 1 $runs); do
 	# First clear any old results from the folder we are about
 	# to populate.
 	results_directory=$lts_directory/apps_capture/$label/${num_machines}_machines/run/run_$run/
+	echo "Putting results in $results_directory"
 	if [[ -d $results_directory ]]; then
 		rm -rf $results_directory
 	fi
@@ -225,7 +229,7 @@ for run in $(seq 1 $runs); do
 		# We need to make sure that the directory is created
 		# regardless of whether we copy anything back.
 		mkdir -p $results_directory/$machine
-		scp -r $machine:$results_directory $results_directory/$machine || echo "It seems that machine $machine did not produce any data."
+		scp -r $machine:$app_results_directory $results_directory/$machine || echo "It seems that machine $machine did not produce any data."
 	done
 
 	if [[ ${#no_capture} == 0 ]]; then
