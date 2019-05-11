@@ -21,7 +21,7 @@ fi
 source /root/jcw78/scripts/general/parse_config.sh
 source /root/jcw78/scripts/general/remote_run.sh
 
-nrg_machine=$(get_config_value NRGMachine)
+nrg_machines=($(cat < nrg_machines))
 timeout_limit=$(get_config_value TimeoutLimit)
 
 typeset -a lines
@@ -58,25 +58,29 @@ for line in ${lines[@]}; do
 		continue
 	fi
 
-	if [[ $nrg_machine != *None* ]]; then
+	for nrg_machine in ${nrg_machines[@]}; do
+		if [[ $nrg_machine == *None* ]]; then
+			continue
+		fi
+
 		echo "Using the NRG!"
 		echo "NRG machine is $nrg_machine"
 
 		remote_run_script $nrg_machine bitfiles/setup_bitfile.sh super_gadget.bit
-	fi
 
-	if [[ $nrg_delay != *None* ]]; then
-		remote_run_script $nrg_machine nrg/set_delay.sh $nrg_delay
-	else
-		remote_run_script $nrg_machine nrg/set_delay.sh 0
-	fi
-	
-	if [[ $nrg_bandwidth != *None* ]]; then
+		if [[ $nrg_delay != *None* ]]; then
+			remote_run_script $nrg_machine nrg/set_delay.sh $nrg_delay
+		else
+			remote_run_script $nrg_machine nrg/set_delay.sh 0
+		fi
+		
+		if [[ $nrg_bandwidth != *None* ]]; then
 
-		remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
-	else
-		remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
-	fi
+			remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
+		else
+			remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
+		fi
+	done
 
 	no_capture_flags=""
 	if [[ ${#no_capture} != 0 ]]; then
