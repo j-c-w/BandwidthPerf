@@ -11,6 +11,7 @@ fi
 
 runs=$(get_config_value Runs)
 HPTMachine=$(get_config_value MachineB)
+LTSLocation=$(get_config_value LTSLocations)
 
 # First, setup the machines.
 ./setup_throuput_machines.sh
@@ -32,23 +33,10 @@ pushd two_port_scan/
 remote_run_command $HPTMachine "echo -n '' > /root/jcw78/nvme/port_data_builder"
 for i in $(seq 1 $runs); do 
 	./run.sh
-	# We need to get the data out and keep it in a unified
-	# file.
-	remote_run_script $HPTMachine evaluation/hpt/throughput/two_port_scan/plot.sh /root/jcw78/nvme/two_port_scan
-	# Get the data files out:
-	remote_run_script $HPTMachine general/paste_wrapper.sh /root/jcw78/nvme/two_port_scan/both_ports_data /root/jcw78/nvme/both_ports_data_builder /root/jcw78/nvme/both_ports_data_builder
 
-	# Archive the folders:
-	remote_run_script $HPTMachine general/archive_results.sh /root/jcw78/nvme/two_port_scan/ /root/jcw78/nvme/two_port_scan_${i}.tar.bz2
+	remote_run_command $HPTMachine "mkdir -p $LTSLocation/two_port_scan/run_${i}"
+	remote_run_command $HPTMachine "mv /root/jcw78/nvme/two_port_scan/ $LTSLocation/two_port_scan/run_$i"
 done
-
-# Run the analyses on the overall folders.
-remote_run_script $HPTMachine /evaluation/hpt/throughput/two_port_scan/plot.sh /root/jcw78/nvme/both_ports_data_builder
-
-# Finally, move all the archived folders over to the LTS.
-lts_dir=$(get_config_value LTSLocations)
-remote_run_command $HPTMachine "mv /root/jcw78/nvme/two_port_scan_* $lts_dir"
-remote_run_command $HPTMachine "mv /root/jcw78/nvme/both_ports_data_builder $lts_dir"
 
 popd
 echo "All done!"
