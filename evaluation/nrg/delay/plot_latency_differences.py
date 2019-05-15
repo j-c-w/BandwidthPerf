@@ -46,7 +46,7 @@ if __name__ == "__main__":
             with open(args.folder + '/' + file) as f:
                 this_file_delays = f.readlines()[0].split(',')
                 for i in range(len(this_file_delays)):
-                    this_file_delays[i] = Decimal(this_file_delays[i]) * Decimal(1000000000.0)
+                    this_file_delays[i] = Decimal(this_file_delays[i])
                 this_measured_delays += this_file_delays
         # Keep track of all of the delays.
         measured_delays.append(this_measured_delays)
@@ -55,30 +55,28 @@ if __name__ == "__main__":
 
     # Also produce graphs for each delay with the CDF
     # for that delay.
+    if delays[0] == 0:
+        zero_delay = np.median(measured_delays[0])
+    else:
+        zero_delay = Decimal(0.0)
+
     for index in range(len(delays)):
+        this_delays = [float(x - zero_delay - delays[index]) for x in measured_delays[index]]
         plt.clf()
         plt.title("Distribution of introduced latencies by the \n NRG with requested latency of %s ns" % delays[index])
-        plt.xlabel("Measured Delay")
+        plt.xlabel("Measured Delay (ns)")
         plt.ylabel("CDF")
         plt.xticks(rotation=90)
         ax = plt.gca()
-        xmin = float(min(measured_delays[index]))
-        xmax = float(max(measured_delays[index]))
+        xmin = float(min(this_delays))
+        xmax = float(max(this_delays))
         ax.set_xticks(np.arange(xmin, xmax, (xmax - xmin)/20.0))
         bins = np.append(np.linspace(xmin, xmax, 1000), np.inf)
         ax.set_axisbelow(True)
         plt.grid()
-        plt.hist([float(x) for x in measured_delays[index]], cumulative=True, bins=bins, normed=True, histtype='step')
+        plt.hist(this_delays, cumulative=True, bins=bins, normed=True, histtype='step')
         plt.tight_layout()
         plt.savefig('delay_distribution_for_latency_' + str(delays[index]) + '.eps')
-
-    # For the plot with all of these, we want to look at the differences
-    # between the requested and the real amount.
-    for i in range(len(delays)):
-        measurements = measured_delays[i]
-        delay = Decimal(delays[i])
-        for j in range(len(measurements)):
-            measurements[j] -= delay
 
     for i in range(len(measured_delays)):
         for j in range(len(measured_delays[i])):
@@ -89,25 +87,25 @@ if __name__ == "__main__":
     y_errors_min = []
     y_errors_max = []
 
-    for measurements in measured_delays:
-        graph_value = np.median(measurements)
+    for i in range(len(measured_delays)):
+        measurements = measured_delays[i]
+        requested = delays[i]
+        graph_value = np.median(measurements) - requested
         y_data.append(graph_value)
-        print min(measurements)
-        print max(measurements)
-        y_errors_min.append(graph_value - min(measurements))
-        y_errors_max.append(max(measurements) - graph_value)
-    print len(delays)
-    print len(y_data)
+        low99th, high99th = (min(measurements), max(measurements))
+        y_errors_min.append(graph_value - (low99th - requested))
+        y_errors_max.append((high99th - requested) - graph_value)
 
     plt.clf()
     plt.title("Difference between Requested Delay and Measured Delay (NRG)")
-    plt.xlabel("Requested Delay (log ns)")
-    plt.ylabel("Difference between requested and measured delay (log ns)")
+    plt.xlabel("Requested Delay (ns)")
+    plt.ylabel("Difference between requested and measured delay (ns)")
 
     ax = plt.gca()
-    ax.set_yscale('log')
     ax.set_xscale('log')
-    plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max), fmt='o')
+    ax.set_yscale('log')
+    plt.grid()
+    plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
     plt.savefig('nrg_requested_delay_vs_measured_delay.eps')
 
     # Plot the same thing, but with the offset of the latency introduced at 0.
@@ -117,24 +115,26 @@ if __name__ == "__main__":
         y_errors_max = []
 
         zero_min_delay = min(measured_delays[0])
+        print zero_min_delay
 
-        for measurements in measured_delays:
-            graph_value = np.median(measurements)
-            y_data.append(graph_value - zero_min_delay)
-            print min(measurements)
-            print max(measurements)
-            y_errors_min.append(graph_value - min(measurements) - zero_min_delay)
-            y_errors_max.append(max(measurements) - (graph_value - zero_min_delay))
-        print len(delays)
-        print len(y_data)
+        print measured_delays
+        for i in range(len(measured_delays)):
+            measurements = measured_delays[i]
+            requested = delays[i]
+            print requested
+            graph_value = np.median(measurements) - requested - zero_min_delay
+            y_data.append(graph_value)
+            low99th, high99th = (min(measurements), max(measurements))
+            y_errors_min.append(graph_value - (low99th - requested - zero_min_delay))
+            y_errors_max.append((high99th - requested - zero_min_delay) - graph_value)
 
         plt.clf()
         plt.title("Difference between Requested Delay and Added Delay (NRG)")
-        plt.xlabel("Requested Delay (log ns)")
-        plt.ylabel("Difference between requested and measured delay (log ns)")
+        plt.xlabel("Requested Delay (ns)")
+        plt.ylabel("Difference between requested and measured delay (ns)")
 
+        plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
         ax = plt.gca()
-        ax.set_yscale('log')
         ax.set_xscale('log')
-        plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max), fmt='o')
+        plt.grid()
         plt.savefig('nrg_requested_delay_vs_added_delay.eps')

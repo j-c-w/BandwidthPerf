@@ -41,7 +41,7 @@ if [[ ${#no_extract} == 0 ]]; then
 			unzipped_delayed_fn=${delayed_fn/.bz2/}
 
 			/root/jcw78/scripts/hpt/extract_csv.sh $tmp_location/$unzipped_undelayed_fn $tmp_location/$undelayed_fn.csv
-			/root/jcw78/scripts/hpt/extract_csv.sh $tmp_location/$unzipped_delayed_fn $tmp_location/$delayed_fn_csv
+			/root/jcw78/scripts/hpt/extract_csv.sh $tmp_location/$unzipped_delayed_fn $tmp_location/$delayed_fn.csv
 
 			# Once we have those extracted, work out all the packet
 			# time diffs using the python script.
