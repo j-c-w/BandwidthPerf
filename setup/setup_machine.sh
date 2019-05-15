@@ -55,6 +55,7 @@ python -m pip install  matplotlib --ignore-installed
 pip install statistics
 pip install numpy
 pip install scipy
+pip install flock
 
 # Get the PCAP parsing scripts
 if [[ ! -d process_pcap_traces ]]; then
