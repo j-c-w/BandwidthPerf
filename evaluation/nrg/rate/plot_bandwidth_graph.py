@@ -50,10 +50,11 @@ for key in sorted(values.keys()):
         else:
             distribution[value] = 1.0
 
-    rv = st.rv_discrete(values=(distribution.keys(), np.array(distribution.values())/np.array(distribution.values()).sum()))
+    # rv = st.rv_discrete(values=(distribution.keys(), np.array(distribution.values())/np.array(distribution.values()).sum()))
 
     # scipy.stats.rv_discrete has methods for median, confidence interval, etc.
-    (below, above) = rv.interval(0.9)
+    # (below, above) = rv.interval(0.9)
+    (below, above) = (min(values[key]), max(values[key]))
     error_values.append((median - below, above - median))
 
 plt.errorbar(xvalues, yvalues, yerr=np.transpose(error_values))
