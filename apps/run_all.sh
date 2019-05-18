@@ -1,4 +1,6 @@
 #!/bin/zsh
+#
+zmodload zsh/mathfunc
 
 echo "This script runs and captures all of the setups defined"
 echo "in the ./apps file.  See that file for comments on how"
@@ -65,6 +67,8 @@ for line in ${lines[@]}; do
 
 		echo "Using the NRG!"
 		echo "NRG machine is $nrg_machine"
+		echo "Setting NRG delay to $nrg_delay"
+		echo "Seeting NRG rate to $nrg_bandwidth"
 
 		remote_run_script $nrg_machine bitfiles/setup_bitfile.sh super_gadget.bit
 
@@ -76,9 +80,9 @@ for line in ${lines[@]}; do
 		
 		if [[ $nrg_bandwidth != *None* ]]; then
 
-			remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
+			remote_run_script $nrg_machine nrg/set_rate.sh $(( nrg_bandwidth / 1000.0 ))
 		else
-			remote_run_script $nrg_machine nrg/set_rate.sh $nrg_bandwidth
+			remote_run_script $nrg_machine nrg/set_rate.sh 10
 		fi
 	done
 
