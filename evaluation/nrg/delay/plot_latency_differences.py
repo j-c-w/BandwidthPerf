@@ -3,6 +3,9 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import sys
+sys.path.insert(0, '/root/jcw78/process_pcap_traces/')
+import graph_utils
 
 # This script assumes that all the latency files
 # we want to include have been produced.
@@ -63,8 +66,7 @@ if __name__ == "__main__":
     for index in range(len(delays)):
         this_delays = [float(x - zero_delay - delays[index]) for x in measured_delays[index]]
         plt.clf()
-        plt.title("Distribution of introduced latencies by the \n NRG with requested latency of %s ns" % delays[index])
-        plt.xlabel("Measured Delay (ns)")
+        plt.xlabel("Difference in Delay (ns)")
         plt.ylabel("CDF")
         plt.xticks(rotation=90)
         ax = plt.gca()
@@ -76,6 +78,7 @@ if __name__ == "__main__":
         plt.grid()
         plt.hist(this_delays, cumulative=True, bins=bins, normed=True, histtype='step')
         plt.tight_layout()
+        graph_utils.set_yax_max_one()
         plt.savefig('delay_distribution_for_latency_' + str(delays[index]) + '.eps')
 
     for i in range(len(measured_delays)):
@@ -97,15 +100,14 @@ if __name__ == "__main__":
         y_errors_max.append((high99th - requested) - graph_value)
 
     plt.clf()
-    plt.title("Difference between Requested Delay and Measured Delay (NRG)")
     plt.xlabel("Requested Delay (ns)")
-    plt.ylabel("Difference between requested and measured delay (ns)")
+    plt.ylabel("Difference in Delay (ns)")
 
     ax = plt.gca()
     ax.set_xscale('log')
     ax.set_yscale('log')
-    plt.grid()
     plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
+    graph_utils.set_ticks()
     plt.savefig('nrg_requested_delay_vs_measured_delay.eps')
 
     # Plot the same thing, but with the offset of the latency introduced at 0.
@@ -129,12 +131,11 @@ if __name__ == "__main__":
             y_errors_max.append((high99th - requested - zero_min_delay) - graph_value)
 
         plt.clf()
-        plt.title("Difference between Requested Delay and Added Delay (NRG)")
         plt.xlabel("Requested Delay (ns)")
-        plt.ylabel("Difference between requested and measured delay (ns)")
+        plt.ylabel("Difference in Delay (ns)")
 
         plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
         ax = plt.gca()
         ax.set_xscale('log')
-        plt.grid()
+        graph_utils.set_ticks()
         plt.savefig('nrg_requested_delay_vs_added_delay.eps')
