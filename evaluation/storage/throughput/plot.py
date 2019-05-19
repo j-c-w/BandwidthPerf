@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import sys
+sys.path.insert(0, '/root/jcw78/process_pcap_traces/')
+import graph_utils
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,9 +33,9 @@ if __name__ == "__main__":
             min_errors.append(bar_value - min(bps))
             max_errors.append(max(bps) - bar_value)
             labels.append(test_name)
-    plt.bar(labels, bars, width=0.8, yerr=(min_errors, max_errors))
+    plt.bar(labels, bars, width=0.8, yerr=(min_errors, max_errors), error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
     plt.ylabel("Gbps")
     ax = plt.gca()
     ax.set_axisbelow(True)
-    plt.grid()
+    graph_utils.set_ticks()
     plt.savefig("storage_throughput.eps")
