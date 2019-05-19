@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as st
 import sys
+sys.path.insert(0, '/root/jcw78/process_pcap_traces/')
+import graph_utils
 
 if len(sys.argv) != 2:
     print "Usage: <script> <results file>"
@@ -57,9 +59,15 @@ for key in sorted(values.keys()):
     (below, above) = (min(values[key]), max(values[key]))
     error_values.append((median - below, above - median))
 
-plt.errorbar(xvalues, yvalues, yerr=np.transpose(error_values))
-plt.title("Requested bandwithd vs. Measured bandwidth (iperf)")
-plt.ylim([0,  10000])
+plt.errorbar(xvalues, yvalues, yerr=np.transpose(error_values), label="Measured Bandwidth")
+# Also plot x = y as a refereence point.
+plt.plot(xvalues, xvalues, label="Expected Bandwidth")
+plt.legend()
 plt.xlabel("Requested Bandwidth (Mbps)")
 plt.ylabel("Measured Bandwidth (Mbps)")
-plt.savefig('requested_vs_real_bandwidth_nrg.eps')
+graph_utils.set_non_negative_axes()
+plt.xlim([0, 10000])
+graph_utils.set_ticks()
+filename = 'requested_vs_real_bandwidth_nrg.eps'
+plt.savefig(filename)
+print "Figure in ", filename
