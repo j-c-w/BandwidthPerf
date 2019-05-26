@@ -60,6 +60,18 @@ if [[ ${#dry_run} != 0 ]]; then
 	exit 0
 fi
 
+if [[ ${#capture_machines} -gt 1 ]]; then
+	# If there is more than one capture card, synchronize
+	# them all.
+	echo "More than one card, synchronizing..."
+	for machine in ${capture_machines[@]}; do
+		dev_name=$(get_config_value "${machine}_exanic0" /root/jcw78/scripts/apps/capture_config)
+		# Kill any existing sync, then start new sync as required.
+		remote_run_script $machine hpt/clock_sync_kill.sh $dev_name
+		remote_run_script $machine hpt/clock_sync_slave.sh $dev_name
+	done
+fi
+
 set -x
 pushd /root/jcw78/SUMMER2017/apps/benchmark/
 for run in $(seq 1 $runs); do
@@ -239,6 +251,7 @@ for run in $(seq 1 $runs); do
 			instrumented_machine=$(get_config_value "${machine}_instrumenting" /root/jcw78/scripts/apps/capture_config)
 
 			remote_run_command $machine "mkdir -p $results_directory"
+			# remote_run_command $machine "if [[ $(grep -e
 			remote_run_command $machine "bzip2 $capture_location/$label/${num_machines}_machines/${machine}-0.expcap; mv $capture_location/$label/${num_machines}_machines/${machine}-0.expcap.bz2 $results_directory/${instrumented_machine}_captured_by_${machine}.expcap.bz2; mv $capture_location/$label/${num_machines}_machines/${machine}_cmd_out $results_directory/${instrumented_machine}_captured_by_${machine}_cmd_out" &
 		done
 		wait
@@ -280,6 +293,18 @@ for run in $(seq 1 $runs); do
 
 	echo "Done with run!"
 done
+
+# Kill the clock sync.
+if [[ ${#capture_machines} -gt 1 ]]; then
+	# If there is more than one capture card, synchronize
+	# them all.
+	echo "More than one card, synchronizing..."
+	for machine in ${capture_machines[@]}; do
+		dev_name=$(get_config_value "${machine}_exanic0" /root/jcw78/scripts/apps/capture_config)
+		remote_run_script $machine hpt/clock_sync_kill.sh $dev_name
+	done
+fi
+
 if [[ ${#no_capture} == 0 ]]; then
 	echo "Done with capture!"
 else
