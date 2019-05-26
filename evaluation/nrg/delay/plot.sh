@@ -61,4 +61,4 @@ if [[ ${#no_extract} == 0 ]]; then
 fi
 
 # Now that all of those are extracted, plot the actual graph.
-python plot_latency_differences.py $lts_location/nrg_delay/pcaps
+python plot_latency_differences.py $lts_location/nrg_delay/pcaps --group 100 1000

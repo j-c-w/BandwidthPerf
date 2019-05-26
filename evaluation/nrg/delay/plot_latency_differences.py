@@ -13,6 +13,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('folder')
+    parser.add_argument('--groups', action='append', default=[], nargs='+', help='Draw the latencies of multiple delays on a single graph.', dest='groups')
     args = parser.parse_args()
 
     files = os.listdir(args.folder)
@@ -53,7 +54,7 @@ if __name__ == "__main__":
                 this_measured_delays += this_file_delays
         # Keep track of all of the delays.
         measured_delays.append(this_measured_delays)
-        print "Extracted Delays for requested delay", delays[delays_index]
+        print "Loaded Delays for requested delay", delays[delays_index]
         delays_index += 1
 
     # Also produce graphs for each delay with the CDF
@@ -80,6 +81,47 @@ if __name__ == "__main__":
         plt.tight_layout()
         graph_utils.set_yax_max_one()
         plt.savefig('delay_distribution_for_latency_' + str(delays[index]) + '.eps')
+
+    for group in args.groups:
+        delays_in_group = [int(x) for x in group]
+        measured_delays_in_group = []
+        overall_min = None
+        overall_max = None
+
+        for delay in delays_in_group:
+            index = delays.index(delay)
+            this_delays = [float(x - zero_delay - delays[index]) for x in measured_delays[index]]
+            measured_delays_in_group.append(this_delays)
+
+            this_max = max(this_delays)
+            this_min = min(this_delays)
+            if overall_min:
+                overall_min = min(overall_min, this_min)
+                overall_max = max(overall_max, this_max)
+            else:
+                overall_min = this_min
+                overall_max = this_max
+
+        plt.clf()
+        plt.xlabel("Difference in Delay (ns)")
+        plt.ylabel("CDF")
+        plt.xticks(rotation=90)
+        ax = plt.gca()
+        xmin = float(overall_min)
+        xmax = float(overall_max)
+        ax.set_xticks(np.arange(xmin, xmax, (xmax - xmin)/20.0))
+        bins = np.append(np.linspace(xmin, xmax, 1000), np.inf)
+        ax.set_axisbelow(True)
+        plt.grid()
+        for index in range(len(measured_delays_in_group)):
+            this_delays = measured_delays_in_group[index]
+            this_label = group[index] + ' ns'
+
+            plt.hist(this_delays, cumulative=True, bins=bins, normed=True, histtype='step', label=this_label)
+        plt.tight_layout()
+        graph_utils.set_yax_max_one()
+        graph_utils.legend_bottom_right()
+        plt.savefig('delay_distribution_for_latencies_' + '_'.join(group) + '.eps')
 
     for i in range(len(measured_delays)):
         for j in range(len(measured_delays[i])):
