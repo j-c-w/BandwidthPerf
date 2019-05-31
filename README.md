@@ -1,6 +1,6 @@
 This directory contains all the scripts used for the analysis of bandwidth.
 
-To use:
+To use (requires access to all repos):
 1. Put this project in /root/jcw78/scripts
 2. Go to setup
 3. Run ./setup\_machine.sh (Do this even if you expanded this from a tar archive)
@@ -12,6 +12,10 @@ To use:
 	- pcap\_files: a set of generated pcap files for use during testing.
 	- NRG-dev: APIs for the NRG.
 	- NetFPGA-SUME-live + OSTN-SUME-line: 
+
+ALTERNATIVE (repos already cloned):
+1. Unzip environment.tar into /root/jcw78
+2. Then follow the normal setup :)
 
 After that is done, 
 	- setup/: This contains scripts to set up machines.  Some scripts may need modification for your system: those are explained clearly in the README there.  Start here, or do steps 1-5 above to setup your  machines.
