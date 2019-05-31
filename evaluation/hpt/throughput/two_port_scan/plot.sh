@@ -17,6 +17,7 @@ max_rate=$(get_config_value MaxRate)
 step_size=$(get_config_value StepSize)
 num_packets_sent=$(get_config_value NumberToSend)
 runs=$(get_config_value Runs ../config)
+packet_size=$(get_config_value PacketSize)
 
 # Process the data to produce the processed data folder.
 pushd $1
@@ -40,4 +41,4 @@ done
 popd
 
 set -x
-python plot.py $min_rate $step_size $max_rate $num_packets_sent ${parsed_data[@]}
+python plot.py $min_rate $step_size $max_rate $num_packets_sent $packet_size ${parsed_data[@]}

@@ -59,7 +59,8 @@ for key in sorted(values.keys()):
     (below, above) = (min(values[key]), max(values[key]))
     error_values.append((median - below, above - median))
 
-plt.errorbar(xvalues, yvalues, yerr=np.transpose(error_values), label="Measured Bandwidth")
+errorplot = plt.errorbar(xvalues, yvalues, yerr=np.transpose(error_values), label="Measured Bandwidth")
+errorplot[-1][0].set_linestyle('--')
 # Also plot x = y as a refereence point.
 plt.plot(xvalues, xvalues, label="Expected Bandwidth")
 plt.legend()

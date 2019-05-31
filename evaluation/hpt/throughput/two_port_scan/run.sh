@@ -26,7 +26,7 @@ both_cpus=$(get_config_value HPTCPUsBoth ../config)
 total_space=0.0
 # Wire capacity in Mbps.
 wire_capacity=10000
-packet_length=64
+packet_length=$(get_config_value PacketSize)
 
 # Before we start, make sure that all existing recording
 # is killed:

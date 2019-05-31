@@ -148,7 +148,8 @@ if __name__ == "__main__":
     ax = plt.gca()
     ax.set_xscale('log')
     ax.set_yscale('log')
-    plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
+    errorplot = plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
+    errorplot[-1][0].set_linestyle('--')
     graph_utils.set_ticks()
     plt.savefig('nrg_requested_delay_vs_measured_delay.eps')
 
@@ -176,7 +177,8 @@ if __name__ == "__main__":
         plt.xlabel("Requested Delay (ns)")
         plt.ylabel("Difference in Delay (ns)")
 
-        plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
+        errorplot = plt.errorbar(delays, y_data, yerr=(y_errors_min, y_errors_max))
+        errorplot[-1][0].set_linestyle('--')
         ax = plt.gca()
         ax.set_xscale('log')
         graph_utils.set_ticks()

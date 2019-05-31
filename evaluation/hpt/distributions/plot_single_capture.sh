@@ -38,7 +38,7 @@ csv_filename="${new_filename/.expcap.bz2/.csv}"
 # Now, draw the distribution graph.  Leave the graph here.
 full_csv_filename=$(readlink -f $csv_filename)
 pushd /root/jcw78/process_pcap_traces/
-python inter_arrival_distribution_graph.py "$full_csv_filename"
+python inter_arrival_distribution_graph.py --input "$full_csv_filename" "Inter Arrival Time" --output-name "$(basename csv_filename)"
 popd
 
 # Remove things to clear space

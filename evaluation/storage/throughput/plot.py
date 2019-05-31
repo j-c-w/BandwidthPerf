@@ -38,4 +38,5 @@ if __name__ == "__main__":
     ax = plt.gca()
     ax.set_axisbelow(True)
     graph_utils.set_ticks()
+    graph_utils.set_non_negative_axes()
     plt.savefig("storage_throughput.eps")
