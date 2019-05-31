@@ -5,7 +5,7 @@ if [[ $# -ne 2 ]]; then
     exit 1
 fi
 
-/root/jcw78/scripts/hpt_setup/exanic-exact/exact-capture-1.0RC/bin/exact-pcap-extract -i "$1" -w "$2"
+/root/jcw78/scripts/hpt_setup/exanic-exact/exact-capture-1.0RC/bin/exact-pcap-extract -i "$1" -w "$2" -a
 
 # The ExaNIC tool mangles the name, so undo that.
 mv ${2}_0.pcap $2
