@@ -1,3 +1,4 @@
+THIS FOLDER IS NOW DEPRECATED.  SEE evaluation/hpt
 This folder contains the reproduction scripts for testing the HPT card.
 
 #Hardware setup
