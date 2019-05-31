@@ -1,9 +1,11 @@
+# Where to retrieve the data from.  This should be the same as in size_scan.
 LTSLocations: /root/jcw78/lts
+# Sizes to plot.
 MinSize: 64
 MaxSize: 1514
 SizeStep: 1
 
-# This is for the scale of parallelism we can use.  Configure the max number of files we want to decompress and plot at once.
+# This is for the scale of parallelism we can use.  Configure the max number of files we want to decompress and plot at once.  This will likely be limited by your hard drive space.
 Parallelism: 5
 
 # Also configure a place to decompress the files to.

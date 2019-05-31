@@ -1,8 +1,10 @@
 # This is a config file.
+# This is the OSNT Machine
 MachineA: nf-server06.nf.cl.cam.ac.uk
-MachineB: nf-server14.nf.cl.cam.ac.uk
-HPTInterface0: ens6
-HPTInterface1: ens6d1
+# This is the caspture machine.
+MachineB: nf-server12.nf.cl.cam.ac.uk
+HPTInterface0: ens8
+HPTInterface1: ens8d1
 # These CPUS should be as described in the ExanicExact documentation: basically, close to the NVMe and the ExaNIC.
 # They should definitely be different CPUs, since both
 # ports can be running at the same time.
@@ -17,4 +19,4 @@ NVMeDeviceName:  None
 # here.
 LTSLocations: /root/jcw78/lts
 # Number of runs for the test:
-Runs: 3
+Runs: 10

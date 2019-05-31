@@ -8,13 +8,17 @@ MachineC: nf-server12.nf.cl.cam.ac.uk
 # Second Iperf machine
 MachineD: nf-server01.nf.cl.cam.ac.uk
 MachineDTestIP: 192.168.0.2
+# Nice on MachIC A
 NICA: ens4f0
+# NIC on machine D
 NICD: ens2f0
+# How much to run, and at what rates.
 Runs: 5
-MinRate: 50
+MinRate: 200
 MaxRate: 10000
-StepSize: 50
+StepSize: 200
 IPerfRunLength: 20
 # Should we use the HPT to capture?  (note you will need a different physical setup if this is True)
+# Capture is not needed for fulll resuts but may be interesting to analyze
 Record: False
 NVMeDeviceName: /dev/nvme0n1p1

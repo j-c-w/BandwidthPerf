@@ -5,7 +5,7 @@ Connect a NetFPGA on Machine A to an optical tap.  Connect the outputs of the op
 Make sure that Machine A has vivado and XMD installed.
 
 Edit the config file with the appropriate hostnames/IPs
-for machine A and B.
+for machine A and B.  Also change the config file in one\_port\_scan/config and two\_port\_scan/config
 
 Make sure that the local disk on machine B has enough space to store the traces (compressed).  If not, mount a long term storage disk in /root/jcw78/lts.  That is where all PCAP files will be left.
 

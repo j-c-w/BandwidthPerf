@@ -1,6 +1,7 @@
 # This is a list of folders to check the throughput of.
 # In each, we will create a file called 'disk_test'.
 Folders: /root/jcw78/nvme /root/jcw78/ramdisk
-# Each folder should have an associated name.
+# Each folder should have an associated name.  This is used for data storage and when plotting.
 Names: NVMe RamDisk
+# how many times to test.
 Runs: 10

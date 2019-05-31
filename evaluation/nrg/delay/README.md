@@ -1,4 +1,4 @@
-This test attempts to determine the accuracy of the latency control on the NRG.
+This test attempts to determine the accuracy of the latency control on the NRG.  This is done with a typical latency testing setup.
 
 It assumes the following setup:
 
@@ -10,3 +10,9 @@ It assumes the following setup:
 
 	Connect the other output of the tap into port 1 of an HPT
 	card on Machine C.
+
+Edit the config files:
+	config
+	../config
+
+Then run 'run.sh'

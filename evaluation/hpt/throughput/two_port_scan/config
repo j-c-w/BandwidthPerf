@@ -4,3 +4,4 @@ NumberToSend: 100000000
 MinRate: 1000
 MaxRate: 10000
 StepSize: 100
+PacketSize: 64

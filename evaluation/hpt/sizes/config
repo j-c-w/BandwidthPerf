@@ -1,5 +1,7 @@
 # This is a config file.
+# This machine is used for running OSNT
 MachineA: nf-server13.nf.cl.cam.ac.uk
+# This machine is used to capture with an HPT card.
 MachineB: nf-server14.nf.cl.cam.ac.uk
 HPTInterface0: ens8
 HPTInterface1: ens8d1

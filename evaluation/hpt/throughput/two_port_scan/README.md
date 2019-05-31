@@ -1,2 +1,1 @@
-This is a test that takes the HPT beyond what is advertised
-in the manual.  This is done by inp
+See readme in the parent folder.  Note that you have to edit the config file here too.

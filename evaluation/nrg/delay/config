@@ -10,8 +10,8 @@ HPTPort1: ens8d1
 HPTCPUs: 1:2:3
 HPTCPUs1: 10:11:12
 Runs: 10
-NumPackets: 10000
+NumPackets: 1000000
 Rate: 2000
 NVMeDeviceName: /dev/nvme0n1p1
 LTSLocation: /root/jcw78/lts
-TempStorageLocation: /root/jcw78/tmp
+TempStorageLocation: /root/jcw78/tmp/nrg_delay

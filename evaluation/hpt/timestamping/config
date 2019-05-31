@@ -1,5 +1,6 @@
-# This is a config file.
+# This is used to run OSNT.
 MachineA: nf-server06.nf.cl.cam.ac.uk
+# This is used to run an HPT.
 MachineB: nf-server12.nf.cl.cam.ac.uk
 HPTInterface0: ens8
 HPTInterface1: ens8d1

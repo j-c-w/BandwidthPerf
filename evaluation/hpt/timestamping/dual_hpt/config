@@ -1,8 +1,11 @@
+# This is used to run an HPT card
 OtherHPTMachine: nf-server14.nf.cl.cam.ac.uk
 OtherHPTInterface0: ens8
 OtherNVMeDeviceName: None
+# These are the CPUs to send.
 OtherHPTCPUs: 1:2,3:4,5,6
 NumberToSend: 10000000
+# The minimum and maximum packet rate (Mbps) to use.
 MinRate: 10000
 MaxRate: 10000
 StepSize: 1

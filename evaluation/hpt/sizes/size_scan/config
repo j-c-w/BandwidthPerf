@@ -1,4 +1,6 @@
+# Number of packets to send
 NumberToSend: 10000000
+# Range of packet sizes to test.
 MinSize: 124
 MaxSize: 224
 StepSize: 10

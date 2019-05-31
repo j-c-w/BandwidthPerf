@@ -1,4 +1,6 @@
+# Location to store results.
 LTSLocation: /root/jcw78/lts
+# HPT configuration parameters.  Note that captures in this section are not high-performance captures, so a low performance capture setup can be used.
 HPTPort: exa0
 HPTCPUs: 44:45:46
 HPTCPUs1: 41:42:43
