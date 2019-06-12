@@ -30,8 +30,8 @@ if (( total > ${#machines} )); then
 	exit 1
 fi
 
-master_apps=( pmls-master apache-server dns-server iperf-server hadoop-master memcached-server memcached-agent monitor-master mysql-server mysql-slave spark-master tcpdump-master tensorflow-master )
-slave_apps=( pmls-slave apache-client dns-client iperf-client hadoop-slave memcached-client mysql-client ptpd-client spark-slave tcpdump-slave tensorflow-slave )
+master_apps=( pmls-master apache-server dns-server iperf-server hadoop-master memcached-server memcached-agent monitor-master mysql-server mysql-slave spark-master tcpdump-master tensorflow-master tcpping-server ping-server empty-server )
+slave_apps=( pmls-slave apache-client dns-client iperf-client hadoop-slave memcached-client mysql-client ptpd-client spark-slave tcpdump-slave tensorflow-slave tcpping-client ping-client empty-client )
 
 echo "# Formate is: <management  interface for the machine in question> <interface over which tests will be run> <benchmark>-<role>" > $config_file
 
