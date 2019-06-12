@@ -41,12 +41,25 @@ for line in ${lines[@]}; do
 
 	name=$(cut -f1 -d ' ' <<< $line)
 	number_of_machines=$(cut -f2 -d ' ' <<< $line)
-	nrg_delay=$(cut -f3 -d ' ' <<< $line)
-	nrg_bandwidth=$(cut -f4 -d ' ' <<< $line)
+	no_capture_setting=$(cut -f3 -d ' ' <<< $line)
+	nrg_delay=$(cut -f4 -d ' ' <<< $line)
+	nrg_bandwidth=$(cut -f5 -d ' ' <<< $line)
+	alternate_config_env=$(cut -f6 -d ' ' <<< $line)
 
 	# All remaining items are benchmarks.
-	benchmarks=($(cut --complement -f1-4 -d' ' <<< $line))
+	benchmarks=($(cut --complement -f1-6 -d' ' <<< $line))
 	echo "Running ${#benchmarks} benchmarks"
+
+	# Move in the new config-env if we are using it.
+	if [[ $alternate_config_env != None ]]; then
+		echo "Using a different config-env.sh.  Moving the defualt one into config-env.sh.old"
+		if [[ ${#dry_run} == 0 ]]; then
+			pushd /root/jcw78/SUMMER2017/apps/benchmark
+			mv config-env.sh config-env.sh.old
+			popd
+			cp $alternate_config_env /root/jcw78/SUMMER2017/apps/benchmark/
+		fi
+	fi
 
 	if [[ $nrg_delay != *None* ]] && [[ $nrg_bandwidth != *None* ]]; then
 		echo "Warning: setup with both delay and bandwidth is untested.  Remove this warning (and subsequent exit) if you are sure."
@@ -87,7 +100,7 @@ for line in ${lines[@]}; do
 	done
 
 	no_capture_flags=""
-	if [[ ${#no_capture} != 0 ]]; then
+	if [[ ${#no_capture} != 0 || $no_capture_setting == NoCapture ]]; then
 		no_capture_flags="--no-capture"
 	fi
 
@@ -105,6 +118,14 @@ for line in ${lines[@]}; do
 	(./capture_run.sh $benchmarks $number_of_machines $name $no_capture_flags $no_reboot_flags | tee capture_run_output; echo ${pipestatus[1]} > .ret_code)
 	ret_code=$(cat < .ret_code)
 	echo "Benchmark done, return code '$ret_code'"
+
+	# If the config-end.sh.old was created, then move that back.
+	if [[ -f /root/jcw78/SUMMER2017/apps/benchmark/config-env.sh.old ]]; then
+		pushd /root/jcw78/SUMMER2017/apps/benchmark/
+		mv config-env.sh.old config-env.sh
+		popd
+	fi
+
 	if [[ $ret_code == 124 ]]; then
 		echo "Benchmark timed out.  Logging information to BENCHMARK_TIMEOUTS"
 		echo "The run specified by line '$line' has timed out.  This happened at $(date)" >> BENCHMARK_TIMEOUTS
