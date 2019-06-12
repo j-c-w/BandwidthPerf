@@ -7,6 +7,9 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
+echo "This is only here for reproduction purposes of some initial latency experiments.  YOU SHOULD USE run_all.sh INSTEAD."
+read 'q?press enter to run this anyway'
+
 source /root/jcw78/scripts/general/remote_run.sh
 source /root/jcw78/scripts/general/parse_config.sh
 

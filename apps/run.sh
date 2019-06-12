@@ -3,6 +3,9 @@
 set -eu
 zmodload zsh/mapfile
 
+echo "This is only here for reproduction purposes of some initial latency experiments.  YOU SHOULD USE run_all.sh INSTEAD."
+read 'q?press enter to run this anyway'
+
 # This script runs the benchmark passed.
 if [[ $# -ne 1 ]]; then
 	echo "Usage $0 <benchmark>"
