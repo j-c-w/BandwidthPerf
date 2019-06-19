@@ -33,7 +33,7 @@ rate=$(get_config_value "Rate")
 num_to_send=$(get_config_value "NumPackets")
 size=64
 
-set -x
+typeset -a files_to_compress
 # Stop any recording that might be going on:
 remote_run_script $HPTMachine hpt/stop_recording.sh
 for run in $(seq 1 $runs); do
@@ -67,7 +67,7 @@ for run in $(seq 1 $runs); do
 		files_to_compress+=${file}-0.expcap
 		files_to_compress+=${file1}-0.expcap
 		if [[ ${#files_to_compress} -gt 10 ]]; then
-			remote_run_script $HPTMachine general/parallel_compress.sh $files_to_compress
+			remote_run_script $HPTMachine general/parallel_compress.sh ${files_to_compress[@]}
 			unset files_to_compress
 			typeset -a files_to_compress
 		fi
@@ -75,7 +75,7 @@ for run in $(seq 1 $runs); do
 done
 
 if [[ ${#files_to_compress} -gt 0 ]]; then
-	remote_run_script $HPTMachine general/parallel_compress.sh $files_to_compress
+	remote_run_script $HPTMachine general/parallel_compress.sh ${files_to_compress[@]}
 	unset files_to_compress
 	typeset -a files_to_compress
 fi
