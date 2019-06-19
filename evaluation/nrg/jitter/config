@@ -1,0 +1,18 @@
+# OSNT Machine
+MachineA: nf-server13.nf.cl.cam.ac.uk
+# NRG Machine
+MachineB: nf-server06.nf.cl.cam.ac.uk
+# HPT Machine
+MachineC: nf-server12.nf.cl.cam.ac.uk
+HPTPort: ens8
+HPTPort1: ens8d1
+# The CPUs are not under very high pressure in this test.
+HPTCPUs: 1:2:3
+HPTCPUs1: 10:11:12
+Runs: 10
+NumPackets: 1000000
+NVMeDeviceName: /dev/nvme0n1p1
+LTSLocation: /root/jcw78/lts
+TempStorageLocation: /root/jcw78/tmp/nrg_jitter
+# Delay for this test in ns.  The jitter value is added to this.
+Delay: 100
