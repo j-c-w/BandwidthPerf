@@ -66,7 +66,7 @@ if __name__ == "__main__":
         zero_jitter = Decimal(0.0)
 
     for index in range(len(jitters)):
-        this_jitters = [float(x - zero_jitter - jitters[index]) for x in measured_jitters[index]]
+        this_jitters = [float(x - zero_jitter) for x in measured_jitters[index]]
         plt.clf()
         plt.xlabel("Difference in jitter (ns)")
         plt.ylabel("CDF")
@@ -136,11 +136,11 @@ if __name__ == "__main__":
     for i in range(len(measured_jitters)):
         measurements = measured_jitters[i]
         requested = jitters[i]
-        graph_value = np.median(measurements) - requested
+        graph_value = np.median(measurements)
         y_data.append(graph_value)
         low99th, high99th = (min(measurements), max(measurements))
-        y_errors_min.append(graph_value - (low99th - requested))
-        y_errors_max.append((high99th - requested) - graph_value)
+        y_errors_min.append(graph_value - (low99th))
+        y_errors_max.append((high99th) - graph_value)
 
     plt.clf()
     plt.xlabel("Requested Jitter (ns)")
@@ -165,12 +165,11 @@ if __name__ == "__main__":
 
         for i in range(len(measured_jitters)):
             measurements = measured_jitters[i]
-            requested = jitters[i]
-            graph_value = np.median(measurements) - requested - zero_min_jitter
+            graph_value = np.median(measurements) - zero_min_jitter
             y_data.append(graph_value)
             low99th, high99th = (min(measurements), max(measurements))
-            y_errors_min.append(graph_value - (low99th - requested - zero_min_jitter))
-            y_errors_max.append((high99th - requested - zero_min_jitter) - graph_value)
+            y_errors_min.append(graph_value - (low99th - zero_min_jitter))
+            y_errors_max.append((high99th - zero_min_jitter) - graph_value)
 
         plt.clf()
         plt.xlabel("Requested Jitter (ns)")

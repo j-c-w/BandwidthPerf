@@ -20,7 +20,7 @@ if [[ ${#no_extract} == 0 ]]; then
 
 	mkdir -p $tmp_location
 	# Clear any cache files in the tmp location because those wouldn't be overwritten.
-	rm $tmp_location/*.cache
+	rm -f $tmp_location/*.cache || echo "No cache files already exist: continuing"
 
 	for jitter in $(cat < jitter); do
 		for run in $(seq 1 $runs); do
