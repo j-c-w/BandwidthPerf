@@ -53,11 +53,17 @@ for line in ${lines[@]}; do
 	# Move in the new config-env if we are using it.
 	if [[ $alternate_config_env != None ]]; then
 		echo "Using a different config-env.sh.  Moving the defualt one into config-env.sh.old"
+		echo "Copying from $alternate_config_env"
 		if [[ ${#dry_run} == 0 ]]; then
+			set -x
+			current_dir=$PWD
 			pushd /root/jcw78/SUMMER2017/apps/benchmark
-			mv config-env.sh config-env.sh.old
+			if [[ ! -f config-env.sh.old ]]; then
+				# If this isn't the case, there was probably an early exit that left the FS in an invalid state.
+				mv config-env.sh config-env.sh.old
+			fi
+			cp $current_dir/$alternate_config_env config-env.sh
 			popd
-			cp $alternate_config_env /root/jcw78/SUMMER2017/apps/benchmark/
 		fi
 	fi
 
