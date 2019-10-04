@@ -65,11 +65,14 @@ if [[ ${#capture_machines} -gt 1 ]]; then
 	# them all.
 	echo "More than one card, synchronizing..."
 	for machine in ${capture_machines[@]}; do
-		dev_name=$(get_config_value "${machine}_exanic0" /root/jcw78/scripts/apps/capture_config)
+		dev_name=$(get_config_value "${machine}_card_name" /root/jcw78/scripts/apps/capture_config)
 		# Kill any existing sync, then start new sync as required.
 		remote_run_script $machine hpt/clock_sync_kill.sh $dev_name
-		remote_run_script $machine hpt/clock_sync_slave.sh $dev_name
+		nohup /root/jcw78/scripts/hpt/remote_clock_sync.sh $machine $dev_name & disown
 	done
+	# Let things synchronize.
+	sleep 60
+	echo "Done with sync!"
 fi
 
 set -x
@@ -249,6 +252,7 @@ for run in $(seq 1 $runs); do
 		for machine in ${capture_machines[@]}; do
 			# Catalogue the machine that each machine captured on.
 			instrumented_machine=$(get_config_value "${machine}_instrumenting" /root/jcw78/scripts/apps/capture_config)
+			capture_location=$(get_config_value "${machine}_capture_location" /root/jcw78/scripts/apps/capture_config)
 
 			remote_run_command $machine "mkdir -p $results_directory"
 			# remote_run_command $machine "if [[ $(grep -e
@@ -300,7 +304,7 @@ if [[ ${#capture_machines} -gt 1 ]]; then
 	# them all.
 	echo "More than one card, synchronizing..."
 	for machine in ${capture_machines[@]}; do
-		dev_name=$(get_config_value "${machine}_exanic0" /root/jcw78/scripts/apps/capture_config)
+		dev_name=$(get_config_value "${machine}_card_name" /root/jcw78/scripts/apps/capture_config)
 		remote_run_script $machine hpt/clock_sync_kill.sh $dev_name
 	done
 fi
